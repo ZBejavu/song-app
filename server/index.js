@@ -20,21 +20,42 @@ mysqlCon.connect(err => {
 });
 
 app.get('/songs', (req, res) => {
-    mysqlCon.query('SELECT * FROM song', (error, results, fields) => {
+    let query = 'SELECT * FROM song';
+    let myId = req.query.albumId? Number(req.query.albumId) :0;
+    console.log(myId);
+    if(myId != 0){
+        query = 'SELECT * FROM song WHERE album_id = ?';
+    }
+    mysqlCon.query(query,[myId] ,(error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(err.message);
         };
+        console.log(results);
         res.send(results);
       });
+    // mysqlCon.query('SELECT * FROM song', (error, results, fields) => {
+    //     if (error) {
+    //         console.error(error);
+    //         return res.send(err.message);
+    //     };
+    //     res.send(results);
+    //   });
 });
 
 app.get('/albums', (req, res) => {
-    mysqlCon.query('SELECT * FROM album', (error, results, fields) => {
+    let query = 'SELECT * FROM album';
+    let myId = req.query.artistId? Number(req.query.artistId) :0;
+    console.log(myId);
+    if(myId != 0){
+        query = 'SELECT * FROM album WHERE artist_id = ?';
+    }
+    mysqlCon.query(query,[myId] ,(error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(err.message);
         };
+        console.log(results);
         res.send(results);
       });
 });
