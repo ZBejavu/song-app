@@ -1,0 +1,99 @@
+.specificHeader{
+    width:100%;
+    height:400px;
+    font-weight: 500;
+    margin-left:-10px;
+    font-size: 50px;
+    display:flex;
+    background-color: #343435;
+    padding: 0px 0px 0px 0px;
+    color: black;
+    border-radius: 5px;
+  }
+  .specImage{
+    margin-left:0;
+    width: 600px;
+  }
+  .smallerDetails{
+      font-size: 30px;
+  }
+  .info{
+      padding: 20px;
+  }
+  .specificArtist{
+      margin: 20px 20px;
+  }
+
+  .specResults{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    overflow:scroll; 
+    overflow: auto;
+    height:450px;
+    width:1200px;
+  }
+  .specContainer{
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .speclistContainer{
+    height:400px;
+    width:22%;
+    border-radius: 50px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    background-color: rgb(87, 85, 182);
+    /* background-color:  #202020; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .itemName{
+    height:40px;
+    width:60%;
+    cursor: pointer;
+  }
+  a{
+    text-decoration: none;
+    color:black;
+    height:40px;
+    width:60%;
+  }
+  .specificName:hover{
+    color:rgb(27, 27, 27);
+    transform: scale(1.01);
+    cursor: pointer;
+  }
+  .specificImageDiv{
+    margin-top: -10;
+    height:50%;
+    width:90%;
+  }
+  .specificImage{
+    height:100%;
+    width:100%;
+  }
+  .specTitle{
+    font-size: 45px;
+    font-weight: 500;
+    align-self: start;
+    text-align: center;
+    margin-bottom: 5%;
+  }
+  
+  .specResultContainer{
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 5%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 5px;
+    background-color: rgb(69, 68, 104);
+    background-color:  #252525;
+  }

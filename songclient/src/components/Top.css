@@ -1,0 +1,98 @@
+.header{
+    width:100%;
+    font-weight: 500;
+    margin-left:-10px;
+    font-size: 50px;
+    text-align: center;
+    background-color: #2d2d92;
+    padding: 6px 0px 20px 32px;
+    color: black;
+  }
+  .topResults{
+    overflow:scroll; 
+    overflow: auto;
+    height:200px;
+    width:700px;
+  }
+  .topContainer{
+    margin-top: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .listContainer{
+    height:45px;
+    width:100%;
+    font-weight: 500;
+    margin-bottom: 5px;
+    background-color: rgb(87, 85, 182);
+    /* background-color:  #202020; */
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .itemName,.songName{
+    height:30px;
+    font-size: 18px;
+    width:60%;
+    cursor: default;
+  }
+
+  .nameAndArtist{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width:60%;
+  }
+
+  .nameAndArtist .itemName {
+    width:100%;
+    height:50%;
+  }
+  .nameAndArtist a {
+    width:100%;
+    height:50%;
+  }
+  .nameAndArtist .artistOfSong{
+      padding-left: 10%;
+  }
+  a{
+    text-decoration: none;
+    color:black;
+    height:30px;
+    width:120%;
+  }
+  .itemName:hover , .artistOfSong:hover{
+    color:rgb(27, 27, 27);
+    transform: scale(1.01);
+    cursor: pointer;
+  }
+  .itemImageDiv{
+    height:40px;
+    width:40px;
+  }
+  .itemImage{
+    height:40px;
+    width:40px;
+  }
+  .topTitle{
+    font-size: 25px;
+    font-weight: 500;
+    align-self: start;
+    text-align: center;
+    margin-bottom: 5%;
+  }
+  
+  .topResultContainer{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 5px;
+    background-color: rgb(69, 68, 104);
+    background-color:  #252525;
+  }
+  .artistOfSong{
+      font-size: 13px;
+  }
