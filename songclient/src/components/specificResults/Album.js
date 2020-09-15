@@ -5,7 +5,7 @@ import '../Top.css';
 import './Specific.css';
 import MusicModal from '../musicModal';
 import errorImage from '../../albumCover/errorImage.png';
-function Artist(props){
+function Album(props){
     const[albumObj , setAlbumObj] = useState();
     const[link, setLink] = useState();
     useEffect(() => {
@@ -40,28 +40,25 @@ function Artist(props){
                 </div>
             </div>
 
-            <div className="topContainer">
-                <div className='topResultContainer'>
-                    <div className="topTitle">Songs</div>
-                    <div className="topResults">     
+                <div className="songContainer">    
                         {
                             albumObj.songs.map(song => {
-                                return <div className ='listContainer'>
-                                    <div onClick={()=>{setLink(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div>
+                                return <div className ='listContainer2'>
+                                    <div className='play' onClick={()=>{setLink(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div>
+                                    {/* <div onClick={()=>{proper.func(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div> */}
                                     <div className="nameAndArtist">
                                         <div className ='songName' onClick={() => console.log(song)}>{song.song}</div>
                                         <Link to={`/Artist/${song.artist_id}`}><div className= 'artistOfSong'>{song.artist}</div></Link>
                                     </div>
-                                        <div className ='itemLengthDiv' >{song.length.slice(0,5)}</div>
+                                        <div className ='songLength' >{song.length.slice(0,5)}</div>
                                 </div>
                             })
                         }
-                    </div>
                 </div>
-            </div>
+                
             <MusicModal url={link}/>
         </div>
       );
 }
 
-export default Artist;
+export default Album;

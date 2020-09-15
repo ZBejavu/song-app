@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import './App.css';
 import axios from 'axios';
 import Navbar from './components/Navbar';
+import NavBar2 from './components/NavBar2';
 import HomePage from './components/HomePage';
 import SpecificArtist from './components/specificResults/Artist';
 import SpecificAlbum from './components/specificResults/Album';
@@ -11,6 +12,7 @@ function App() {
   const [videoLink, setVideoLink] = useState();
   const [myArtist, setArtist] = useState();
   const [myAlbum, setAlbum] = useState();
+  const [link, setLink] = useState();
   const [albumPage, setAlbumPage] = useState();
   const [artistPage, setArtistPage] = useState();
   const [resultObj, setResultObj] = useState({artists: [], albums:[],songs:[]});
@@ -97,8 +99,8 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar/>
-        <div class="main">
+        <NavBar2 link ={link} />
+        <div class="main2">
           <Switch>
             <Route path="/" exact component={HomePage} />
             <Route path="/Artist/:id" component={SpecificArtist} />

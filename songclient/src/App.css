@@ -113,20 +113,38 @@ body{
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 0;
 }
+.sidenav2 {
+  height: 120px; /* Full-height: remove this if you want "auto" height */
+  width: 100vw;
+  display: flex;
+  align-items: center; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: rgb(12, 12, 12); /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 0;
+}
+.sidenav2Container{
+  display:flex;
+  align-items: center;
+
+}
 
 /* The navigation menu links */
-.sidenav a {
+.sidenav a,.sidenav2 a {
   padding: 6px 8px 6px 32px;
   text-decoration: none;
   font-weight: 500;
   font-size: 25px;
-  color: #4545E6;
+  color: #d0d0e6;
   display: block;
   transition-duration: 0.1s;
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
+.sidenav a:hover,.sidenav2 a:hover {
   filter:brightness(130%) saturate(130%);
   transform: scale(1.01);
   /* color: #f1f1f1; */
@@ -138,13 +156,25 @@ body{
   padding: 0px 10px;
   height:100%;
 }
+.main2 {
+  margin-top: 120px; /* Same as the width of the sidebar */
+  padding: 0px 10px;
+  height:100%;
+  width:100vw;
+}
 .myLogo{
   width:65%;
   padding-left: 32px;
   padding-top: 0;
   margin-top: -30px;
-
+}
+.myLogo2{
+  width:10vw;
+  padding-left: 32px;
+  padding-top: 0;
+  margin-top: -30px;
 }
 .App{
   margin-top: 0%;
 }
+

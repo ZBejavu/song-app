@@ -1,8 +1,9 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import logo from '../albumCover/logoImage.png';
+import MusicModal from './musicModal';
 import {Link} from 'react-router-dom';
-function Navbar(){
+function Navbar(props){
 
     return (
           <div class="sidenav">
@@ -12,6 +13,7 @@ function Navbar(){
             <a href="#">Songs</a>
             <a href="#">Artists</a>
             <a href="#">Playlists</a>
+            <MusicModal url={props.link}/>
           </div>
       );
 }

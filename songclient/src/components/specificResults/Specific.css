@@ -1,18 +1,22 @@
 .specificHeader{
     width:100%;
-    height:400px;
+    height:40vh;
     font-weight: 500;
     margin-left:-10px;
     font-size: 50px;
     display:flex;
     background-color: #343435;
     padding: 0px 0px 0px 0px;
-    color: black;
+    color: rgb(231, 228, 228);
     border-radius: 5px;
   }
   .specImage{
     margin-left:0;
-    width: 600px;
+    width: 25%;
+  }
+  .specificImage{
+    margin-left:0;
+    width: 25%;
   }
   .smallerDetails{
       font-size: 30px;
@@ -26,31 +30,33 @@
 
   .specResults{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: flex-start;
     overflow:scroll; 
     overflow: auto;
     height:450px;
-    width:1200px;
+    width:100vw;
   }
   .specContainer{
     margin-top: 5%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    align-items: flex-start;
     justify-content: space-evenly;
   }
   .speclistContainer{
-    height:400px;
+    height:50vh;
     width:22%;
     border-radius: 50px;
     font-weight: 500;
     margin-bottom: 5px;
-    background-color: rgb(87, 85, 182);
+    /* background-color: rgb(87, 85, 182); */
+    background-color: transparent;
     /* background-color:  #202020; */
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
   }
   .itemName{
@@ -64,15 +70,18 @@
     height:40px;
     width:60%;
   }
+  .specificName{
+    margin-top: 5%;
+    color:rgb(255, 255, 255);
+  }
   .specificName:hover{
-    color:rgb(27, 27, 27);
+    color:rgb(124, 124, 124);
     transform: scale(1.01);
     cursor: pointer;
   }
   .specificImageDiv{
     margin-top: -10;
-    height:50%;
-    width:90%;
+    width:70%;
   }
   .specificImage{
     height:100%;
@@ -94,6 +103,16 @@
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 5px;
-    background-color: rgb(69, 68, 104);
-    background-color:  #252525;
+    /* background-color: rgb(69, 68, 104); */
+    background-color:  transparent;
+    color: white;
+  }
+
+  .play{
+    color:white;
+  }
+  .play:hover{
+    color:rgb(157, 211, 146);
+    filter:brightness(120%);
+    cursor:pointer;
   }

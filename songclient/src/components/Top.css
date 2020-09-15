@@ -4,9 +4,9 @@
     margin-left:-10px;
     font-size: 50px;
     text-align: center;
-    background-color: #2d2d92;
+    background-color: #312f2f;
     padding: 6px 0px 20px 32px;
-    color: black;
+    color: rgb(238, 237, 237);
   }
   .topResults{
     overflow:scroll; 
@@ -25,16 +25,36 @@
     width:100%;
     font-weight: 500;
     margin-bottom: 5px;
-    background-color: rgb(87, 85, 182);
+    /* background-color: rgb(87, 85, 182); */
+    background-color: transparent;
     /* background-color:  #202020; */
     display: flex;
+    border-bottom: solid thin rgb(7, 7, 7);
     justify-content: space-evenly;
+  }
+
+  .listContainer2{
+    height:fit-content;
+    width:80%;
+    font-weight: 500;
+    margin-bottom: 5px;
+    /* background-color: rgb(87, 85, 182); */
+    background-color: transparent;
+    /* background-color:  #202020; */
+    display: flex;
+    margin: auto;
+    border-bottom: solid thin rgb(7, 7, 7);
+    justify-content: space-evenly;
+  }
+  .songContainer{
+    margin-top: 5vh;
   }
   .itemName,.songName{
     height:30px;
     font-size: 18px;
     width:60%;
     cursor: default;
+    color: rgb(233, 230, 230);
   }
 
   .nameAndArtist{
@@ -75,9 +95,10 @@
     width:40px;
   }
   .topTitle{
-    font-size: 25px;
-    font-weight: 500;
+    font-size: 35px;
+    font-weight: 700;
     align-self: start;
+    color:rgb(158, 37, 37);
     text-align: center;
     margin-bottom: 5%;
   }
@@ -90,9 +111,13 @@
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 5px;
-    background-color: rgb(69, 68, 104);
-    background-color:  #252525;
+    /* background-color: rgb(69, 68, 104);
+    background-color:  #252525; */
+    background-color: transparent;
   }
   .artistOfSong{
       font-size: 13px;
+  }
+  .songLength{
+    color:rgb(240, 236, 236)
   }

@@ -151,7 +151,7 @@ app.get('/playlist/:id' , (req , res) => {
 
 
 app.get('/top_songs', (req , res) => {
-    mysqlCon.query('SELECT song.*,artist.artist_img FROM song join artist on artist.artist_id = song.artist_id LIMIT 20;', (error, results, fields) => {
+    mysqlCon.query('SELECT song.*,artist.artist_img,artist.artist FROM song join artist on artist.artist_id = song.artist_id LIMIT 20;', (error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(error.message);

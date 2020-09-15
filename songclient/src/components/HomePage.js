@@ -4,8 +4,10 @@ import logo from '../albumCover/logoImage.png';
 import {Link} from 'react-router-dom';
 import './Top.css';
 import errorImage from '../albumCover/errorImage.png';
+import MusicModal from './musicModal';
 function HomePage(){
     const [topObject, setTopObject] = useState();
+    const [link , setLink] = useState();
     useEffect( () => {
         let settingObj = {
             topArtists:[],
@@ -30,12 +32,14 @@ function HomePage(){
             console.log(e);
         }
     },[])
+
     return (
           <div class="homePage">
               <div className='header'>Home Page</div>
               {
                   !topObject ? null 
                   :<div className='topContainer'>
+
                       <div className='topResultContainer'>
                           <div className="topTitle">Top artists</div>
                           <div className="topResults">     
@@ -49,6 +53,7 @@ function HomePage(){
                             }
                           </div>
                       </div>
+
                       <div className='topResultContainer'>
                           <div className="topTitle">Top albums</div>
                           <div className="topResults">     
@@ -65,21 +70,27 @@ function HomePage(){
                             }
                           </div>
                       </div>
+
                       <div className='topResultContainer'>
                           <div className="topTitle">Top songs</div>
                           <div className="topResults">     
                             {
                                 topObject.topSongs.map(song => {
                                     return <div className ='listContainer'>
-                                    <div className ='itemName' onClick={() => console.log(song)}>{song["song"]}</div>
-                                    <div className ='itemImageDiv'>
-                                        <img onError={(e)=> e.target.src=errorImage} src={song.artist_img} alt='' className ='itemImage' />
+                                    <div className='nameAndArtist'>
+                                        <div className ='itemName' onClick={() => setLink(song.youtube_link.slice(17,song.youtube_link.length))}>{song["song"]}</div>
+                                        <Link to={`/Artist/${song.artist_id}`}><div className= 'artistOfSong'>{song.artist}</div></Link>
                                     </div>
+                                    <div className='songLength'>{song.length.slice(0,5)}</div>
+                                    {/* <div className ='itemImageDiv'>
+                                        <img onError={(e)=> e.target.src=errorImage} src={song.artist_img} alt='' className ='itemImage' />
+                                    </div> */}
                                     </div>
                                 })
                             }
                           </div>
                       </div>
+
                       <div className='topResultContainer'>
                           <div className="topTitle">Top playlists</div>
                           <div className="topResults">     
@@ -95,6 +106,8 @@ function HomePage(){
                             }
                           </div>
                       </div>
+                      {link&&<MusicModal url={link} />}
+                      
                   </div>
               }
           </div>
