@@ -63,7 +63,7 @@ function Carousel({musicObj , type , title}){
                         myList.slice(carousel.from,carousel.to).map(playlist => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=playlistImage} src={playlist.cover_img} alt={`${playlist.name}Cover`} className ='specificImage' /></div>
-                            <Link to={`/playlist/${playlist.playlist_id}`}><div className ='specificName' onClick={() => console.log(playlist)}>{playlist["name"]}</div></Link>
+                            <Link to={`/Playlist/${playlist.playlist_id}`}><div className ='specificName' onClick={() => console.log(playlist)}>{playlist["name"]}</div></Link>
                             </div>
                         }))
                     }

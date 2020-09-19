@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import '../Top.css';
 import './Specific.css';
 import Carousel from '../Carousel';
+import SongContainer from '../SongContainer';
 import errorImage from '../../albumCover/errorImage.png';
 function Artist(props){
     const[artistObj , setArtistObj] = useState();
@@ -11,17 +12,15 @@ function Artist(props){
     useEffect(() => {
         const id = props.match.params.id;
         try{
-            let getArtist,getAlbums;
+            let getArtist,getAlbums,getSongs;
             getArtist = axios.get(`/artist/${id}`);
-            if(id === '10'){
-                getAlbums = axios.get(`/albums`);
-            }else{
-                getAlbums = axios.get(`/albums?artistId=${id}`);
-            }
-            Promise.all([getArtist,getAlbums]).then(values => {
+            getAlbums = axios.get(`/albums?artistId=${id}`);
+            getSongs = axios.get(`/songs?artistId=${id}`);
+            Promise.all([getArtist,getAlbums,getSongs]).then(values => {
                 setArtistObj({
                     info: values[0].data[0],
-                    albums: values[1].data 
+                    albums: values[1].data,
+                    songs: values[2].data
                 });
             }).catch(e => {console.log(e)})
         }catch(e){
@@ -49,6 +48,8 @@ function Artist(props){
                     <div className='smallerDetails'>Active since : {artistObj.info.artist_uploaded.slice(0,10)}</div>
                 </div>
             </div>
+            <div className='specTitle'>Songs</div>
+            <SongContainer songArray={artistObj.songs} />
             <Carousel musicObj={artistObj} type='artist' title='Albums'/>
 {/* 
             <div className="specContainer">

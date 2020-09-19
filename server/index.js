@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
+const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 app.use(express.static('../songclient/build'));
 app.use(express.json());
@@ -19,7 +20,93 @@ mysqlCon.connect(err => {
     console.log("Connected!");
 });
 
-let users = [];
+let users = [{"name":"Zach", "password":"pass"}];
+
+app.get('/users' , (req , res) => {
+    res.json(users);
+})
+
+app.get('/userexists/:name' , async (req , res) => {
+    let myName = req.params.name ? req.params.name : null;
+    console.log(myName);
+    if(myName === null){
+        return res.status(400).send('no name in request params');
+    }
+    let query = `SELECT * FROM user WHERE user.name = '${myName}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length !== 0){
+            return res.send('Yes');
+        }
+            res.send('No');
+      });
+})
+
+app.post('/users' , async (req , res) => {
+    try{
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        console.log(salt);
+        console.log(hashedPassword);
+        const user = { 
+            name: req.body.name,
+            email: req.body.email, 
+            password: hashedPassword,
+            is_admin: req.body.is_admin || 0,
+            preferences: req.body.preferences,
+            remember_token: hashedPassword.slice(0,Math.round(hashedPassword.length/2))
+            }
+        
+        let query = `INSERT INTO user SET ?`;
+        
+        mysqlCon.query(query , user , (error, results, fields) => {
+            if (error) {
+                console.error(error);
+                return res.send(error.message);
+            };
+                res.send(results);
+          });
+    }catch{
+        res.status(500).send();
+    }
+})
+
+app.post('/login' , async (req, res) => {
+    
+    let myName = req.body.name ? req.body.name : null;
+    console.log(myName);
+    if(myName == null){
+        return res.status(400).send('no name in request body');
+    }
+    let query = `SELECT * FROM user WHERE user.name = '${myName}'`;
+    
+    mysqlCon.query(query, async (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length === 0){
+            return res.send('Cannot find User');
+        }
+            try{
+               if(await bcrypt.compare(req.body.password, results[0].password)){
+                   res.json({"connection" :"success", "token":`${results[0].remember_token}`})
+               } else {
+                   res.send('Incorrect password')
+               }
+            } catch {
+                res.status(500).send();
+            }
+      });
+
+})
+
+
+
 
 app.get('/generalSearch', (req , res) => {
     let searchVal = req.query.generalSearch || '';
@@ -46,10 +133,15 @@ app.get('/generalSearch', (req , res) => {
 
 app.get('/songs', (req, res) => {
     let query = 'SELECT * FROM song';
-    let myId = req.query.albumId? Number(req.query.albumId) :0;
-    console.log(myId);
-    if(myId != 0){
+    let myId ='';
+    let myAlbumId = req.query.albumId? Number(req.query.albumId) :0;
+    let myArtistId = req.query.artistId? Number(req.query.artistId) :0;
+    if(myAlbumId != 0){
+        myId = myAlbumId;
         query = 'SELECT song.*,artist.artist FROM song join artist on artist.artist_id = song.artist_id WHERE song.album_id = ?';
+    }else if(myArtistId != 0){
+        myId = myArtistId;
+        query = 'SELECT song.*,artist.artist,album.album FROM song join artist on artist.artist_id = song.artist_id join album on album.album_id = song.album_id WHERE song.artist_id = ?';
     }
     mysqlCon.query(query,[myId] ,(error, results, fields) => {
         if (error) {
@@ -136,9 +228,11 @@ app.get('/playlist/:id' , (req , res) => {
             return res.send(error.message);
         };
         let playlistObj = {info: results[0], songList:[]};
-        let query = `select song.* from songs_in_playlist
+        let query = `select song.*,album.album,playlist_id from songs_in_playlist
         join song 
         on songs_in_playlist.song_id = song.song_id
+        join album 
+        on song.album_id = album.album_id
         where songs_in_playlist.playlist_id = ${req.params.id};`
         mysqlCon.query(query, (error, results, fields) => {
             if (error) {

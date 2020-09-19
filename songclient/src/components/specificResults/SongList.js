@@ -13,7 +13,6 @@ function SongList(props){
     const videoElem = useRef(null);
     const params = useParams();
     const qParams = new URLSearchParams(location.search);
-    console.log('qparam', qParams.get('topSongs'), match.params.id);
     const[songList, setSongList] = useState();
     const[url, setUrl] = useState();
     const[showSongs, setShowSongs] = useState(true);
@@ -22,29 +21,36 @@ function SongList(props){
     const[progress, setProgress] = useState('');
     const [duration, setDuration] = useState();
     useEffect(() => {
-        if(qParams.get('topSongs')){
-            axios.get('/top_songs').then((response) => {
-
-                let playingSong = response.data.find(song => song.song_id == match.params.id);
-                console.log(playingSong);
-                if(playingSong){
-                    playingSong.playing=true;
-                    setUrl(playingSong.youtube_link);
-                }
-                setSongList(response.data)
-            })
-        }else if(qParams.get('albumId')){
-            axios.get(`/songs?albumId=${qParams.get('albumId')}`).then((response) => {
-
-                let playingSong = response.data.find(song => song.song_id == match.params.id);
-                console.log(playingSong);
-                if(playingSong){
-                    playingSong.playing=true;
-                    setUrl(playingSong.youtube_link);
-                }
-                setSongList(response.data)
-            })
+        let address;
+        let topSongs, artist, album ,playlist;
+        topSongs = qParams.get('topSongs');
+        album = qParams.get('albumId');
+        artist = qParams.get('artistId');
+        playlist = qParams.get('playlistId');
+        if(topSongs){
+            address = '/top_songs';
+        }else if(album){
+            address = `/songs?albumId=${album}`;
+        }else if(artist){
+            address = `/songs?artistId=${artist}`;
         }
+        else if(playlist){
+            address = `/playlist/${playlist}`;
+        }
+        axios.get(address).then((response) => {
+        let playingSong;
+        if(playlist){
+            playingSong = response.data.songList.find(song => song.song_id == match.params.id);
+        }else{
+            playingSong = response.data.find(song => song.song_id == match.params.id);
+        }
+        console.log(playingSong);
+        if(playingSong){
+            playingSong.playing=true;
+            setUrl(playingSong.youtube_link);
+        }
+        playlist?setSongList(response.data.songList) :setSongList(response.data)
+    })
     },[])
     // if(videoElem !== null){
     //     if(videoElem.current !== null){
