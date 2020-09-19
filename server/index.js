@@ -19,6 +19,8 @@ mysqlCon.connect(err => {
     console.log("Connected!");
 });
 
+let users = [];
+
 app.get('/generalSearch', (req , res) => {
     let searchVal = req.query.generalSearch || '';
 
@@ -171,7 +173,7 @@ app.get('/top_albums', (req , res) => {
 })
 
 app.get('/top_artists', (req , res) => {
-    mysqlCon.query('SELECT * FROM artist LIMIT 20', (error, results, fields) => {
+    mysqlCon.query('SELECT * FROM artist LIMIT 24', (error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(error.message);

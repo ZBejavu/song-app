@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 function Navbar2(props){
 
     return (
-          <div class="sidenav2">
+          <div className="sidenav2">
             <img className='myLogo2' src={logo}/>
             <div className="sidenav2Container">
                 <Link to="/">Home</Link>

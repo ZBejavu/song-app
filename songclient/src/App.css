@@ -59,7 +59,7 @@
 }
 
 body{
-  background-color: #181818;
+  background-color: #131313;
   /* background-color: #4c4d8f; */
 }
 .searchResultContainer{
@@ -114,16 +114,15 @@ body{
   padding-top: 0;
 }
 .sidenav2 {
-  height: 120px; /* Full-height: remove this if you want "auto" height */
-  width: 100vw;
+  height: 13vh; /* Full-height: remove this if you want "auto" height */
+  width: 100%;
   display: flex;
   align-items: center; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: rgb(12, 12, 12); /* Black */
-  overflow-x: hidden; /* Disable horizontal scroll */
+  background-color: rgb(12, 12, 12); /* Black */ /* Disable horizontal scroll */
   padding-top: 0;
 }
 .sidenav2Container{
@@ -157,16 +156,16 @@ body{
   height:100%;
 }
 .main2 {
-  margin-top: 120px; /* Same as the width of the sidebar */
-  padding: 0px 10px;
-  height:100%;
-  width:100vw;
+  margin-top: 15vh; /* Same as the width of the sidebar */
+  margin-right: 0;
+  height:85vh;
+  width:100%;
 }
 .myLogo{
-  width:65%;
+  width:60%;
   padding-left: 32px;
   padding-top: 0;
-  margin-top: -30px;
+  margin-top: -30%;
 }
 .myLogo2{
   width:10vw;

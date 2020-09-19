@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import '../Top.css';
 import './Specific.css';
 import MusicModal from '../musicModal';
 import errorImage from '../../albumCover/errorImage.png';
@@ -40,16 +39,16 @@ function Album(props){
                 </div>
             </div>
 
-                <div className="songContainer">    
+                <div className="songContainer2">    
                         {
-                            albumObj.songs.map(song => {
+                            albumObj.songs.map((song,index) => {
                                 return <div className ='listContainer2'>
-                                    <div className='play' onClick={()=>{setLink(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div>
                                     {/* <div onClick={()=>{proper.func(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div> */}
-                                    <div className="nameAndArtist">
-                                        <div className ='songName' onClick={() => console.log(song)}>{song.song}</div>
-                                        <Link to={`/Artist/${song.artist_id}`}><div className= 'artistOfSong'>{song.artist}</div></Link>
-                                    </div>
+                                    <div className='index'>{index+1}.</div>
+                                            <div className="nameAndArtist">
+                                                <Link className ='songName' to={`/Song/${song.song_id}?albumId=${song.album_id}`}>{song.song}</Link>
+                                                <Link to={`/Artist/${song.artist_id}`}><div className= 'artistOfSong'>{song.artist}</div></Link>
+                                            </div>
                                         <div className ='songLength' >{song.length.slice(0,5)}</div>
                                 </div>
                             })

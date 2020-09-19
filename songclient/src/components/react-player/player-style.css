@@ -1,0 +1,71 @@
+.player-wrapper {
+    position: relative;
+    padding-top: 56.25% /* Player ratio: 100 / (1280 / 720) */
+  }
+   
+  .react-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .songList{
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: stretch;
+      margin-top: 5vh;
+      height: 85vh;
+      width:100%;
+  }
+  .songContainer{
+      width:50%;
+      height:80%;
+      overflow-y: scroll;
+      align-items: flex-end;
+  }
+  .videoContainer{
+      height:50%;
+      width:50%;
+  }
+  .hidden{
+      display: none;
+  }
+  .controlFooter{
+    height: 13vh; /* Full-height: remove this if you want "auto" height */
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    bottom: 0; /* Stay at the top */
+    left: 0;
+    background-color: rgb(12, 12, 12); /* Black */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 0;
+  }
+  .controlFooter input{
+      width:80%;
+  }
+  .sliderContainer{
+      width:90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .playSeconds{
+      color:white;
+      margin-left:5%;
+  }
+  .ControlContainer{
+      width: 15%;
+      display:flex;
+      align-items: center;
+      justify-content: space-evenly;
+  }
+  .playButton{
+      width:20px;
+      height:20px;
+  }
