@@ -8,6 +8,7 @@ import SpecificArtist from './components/specificResults/Artist';
 import SongList from './components/specificResults/SongList';
 import SpecificAlbum from './components/specificResults/Album';
 import SpecificPlaylist from './components/specificResults/Playlist';
+import Login from './components/userRelated/Login';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
@@ -109,6 +110,7 @@ function App() {
             <Route path="/Album/:id" component={SpecificAlbum} />
             <Route path="/Song/:id" component={SongList} />
             <Route path="/Playlist/:id" component={SpecificPlaylist} />
+            <Route path="/Login" component={Login} />
           </Switch>
         </div>
       </div>

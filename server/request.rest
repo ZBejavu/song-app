@@ -3,6 +3,9 @@ GET http://localhost:3002/users
 GET http://localhost:3002/userexists/Kyle
 ###
 
+GET http://localhost:3002/validUser/$2b$10$qT2PFSFYWS3DBla9y9NUNu.?name=kyle
+###
+
 POST http://localhost:3002/users
 Content-Type: application/json
 

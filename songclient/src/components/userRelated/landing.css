@@ -1,0 +1,54 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height:60%;
+    padding-top: 10vh;
+    margin:auto;
+    border-radius: 5%;
+    background-color: rgb(12, 11, 11);
+    justify-content: flex-start;
+    align-items: center;
+}
+input{
+    background-color: rgb(26, 26, 26);
+    border-color: transparent;
+    color:white;
+    margin-bottom: 2%;
+    border-radius: 5%;
+}
+.progress{
+    display: inline;
+    margin-left: 5%;
+}
+.CreateAccount{
+    cursor: pointer;
+    font-weight: 500;
+    color: rgb(180, 180, 180);
+    font-size: 1.3rem;
+}
+.inputContain{
+    width:60%;
+    display: flex;
+    align-items: flex-start;
+}
+.inputTitle{
+    margin-right: 5%;
+    font-weight: 500;
+    color:rgb(255, 253, 253);
+}
+.doneIcon{
+    color:rgb(0, 151, 0)
+}
+.errorIcon{
+    color: rgb(207, 29, 29)
+}
+.errorIcon2{
+    color: rgb(223, 149, 52)
+}
+.requirements{
+    margin-top: 5%;
+    font-size:1rem;
+    color: rgb(153, 21, 21)
+
+}

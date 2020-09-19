@@ -40,6 +40,30 @@ app.get('/userexists/:name' , async (req , res) => {
             return res.send(error.message);
         };
         if(results.length !== 0){
+            return res.send(true);
+        }
+            res.send(false);
+      });
+})
+
+app.get('/validUser/:token' , async (req , res) => {
+    let myToken = req.params.token ? req.params.token : null;
+    let myUsername = req.query.name ? req.query.name : null;
+    console.log(myToken);
+    if(myToken === null){
+        return res.status(400).send('no token in request params');
+    }
+    if(myUsername === null){
+        return res.status(400).send('no user in request params');
+    }
+    let query = `SELECT * FROM user WHERE user.remember_token = '${myToken}' AND user.name = '${myUsername}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length !== 0){
             return res.send('Yes');
         }
             res.send('No');
