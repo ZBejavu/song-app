@@ -34,9 +34,9 @@
   .specResults{
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     margin-left: 10%;
-    height:25vh;
+    height:25%;
     width:100%;
   }
   .specContainer{
@@ -81,7 +81,8 @@
     font-size: 0.8rem;
     text-overflow: ellipsis;
     white-space:nowrap;
-    overflow: hidden; 
+    overflow: hidden;
+    width:90%; 
   }
   .specificName:hover{
     color:rgb(124, 124, 124);

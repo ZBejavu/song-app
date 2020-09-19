@@ -3,10 +3,11 @@ import MusicModal from './musicModal';
 import {Link} from 'react-router-dom';
 import errorImage from '../albumCover/errorImage.png';
 import playlistImage from '../albumCover/playlistImage.png';
+import picked from '../albumCover/picked.png';
 import { Icon } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-function Carousel({musicObj , type , title}){
+function Carousel({musicObj , type , title , addPreference, removePreference, preference}){
 
     const[carousel,setCarousel] = useState({from:0,to:5});
     function carouselSetter(value){
@@ -25,8 +26,8 @@ function Carousel({musicObj , type , title}){
         <div className="specContainer">
             {musicObj &&(
             <div className='specResultContainer'>
-                <div className="specTitle">{title?title:type}</div>
-                <div className="specResults">
+                <div className="specTitle">{title?title==='none'?'':title:type}</div>
+                <div style={type==='createAcc'? {marginLeft:'0'}:{}} className="specResults">
             {carousel.to>5 &&<ArrowBackIosIcon className='slideButton' onClick={() => carouselSetter('back')} />} {/*<div onClick={() => carouselSetter('back')} >{'<'}</div>*/}     
                     {
                         (type==='artist' || type==='topAlbums')&&(
@@ -44,6 +45,15 @@ function Carousel({musicObj , type , title}){
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.artist_img} alt={`${artist.artist}Cover`} className ='specificImage' /></div>
                             <Link to={`/Artist/${artist.artist_id}`}><div className ='specificName' onClick={() => console.log(artist)}>{artist["artist"]}</div></Link>
+                            </div>
+                        }))
+                    }
+                    {
+                        (type ==='createAcc')&&(
+                        myList.slice(carousel.from,carousel.to).map(artist => {
+                            return <div onClick={()=>(preference.length<3 && !artist.picked)? addPreference(artist):artist.picked?removePreference(artist):null} style={{cursor:'pointer'}} className ='speclistContainer'>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.picked?picked :artist.artist_img} alt={`${artist.artist}Cover`} className ='specificImage' /></div>
+                            <div className ='nameForCreate' onClick={() => console.log(artist)}>{artist["artist"]}</div>
                             </div>
                         }))
                     }

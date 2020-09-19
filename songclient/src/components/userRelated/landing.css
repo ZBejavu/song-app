@@ -1,14 +1,30 @@
 .container{
     display: flex;
     flex-direction: column;
-    width: 30%;
-    height:60%;
+    width: 40%;
+    height:90%;
     padding-top: 10vh;
     margin:auto;
     border-radius: 5%;
     background-color: rgb(12, 11, 11);
     justify-content: flex-start;
     align-items: center;
+}
+.nameForCreate{
+    margin-top: 5%;
+    color:rgb(255, 255, 255);
+    font-size: 0.7rem;
+    text-align: center;
+    margin-bottom: 5%;
+    margin-top:0%;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
+    width:90%; 
+}
+.removePick:hover{
+    transform: scale(1.15);
+    cursor: pointer;
 }
 input{
     background-color: rgb(26, 26, 26);

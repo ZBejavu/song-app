@@ -46,6 +46,25 @@ app.get('/userexists/:name' , async (req , res) => {
       });
 })
 
+app.get('/emailExists', (req,res) => {
+    let myEmail = req.query.email ? req.query.email : null;
+    if(myEmail == undefined){
+        return res.status(400).send('no email in request query');
+    }
+    let query = `SELECT * FROM user WHERE user.email = '${myEmail}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length !== 0){
+            return res.send(true);
+        }
+            res.send(false);
+      });
+})
+
 app.get('/validUser/:token' , async (req , res) => {
     let myToken = req.params.token ? req.params.token : null;
     let myUsername = req.query.name ? req.query.name : null;

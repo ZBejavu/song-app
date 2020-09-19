@@ -7,20 +7,33 @@ import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 import {validateUser , validatePassword} from '../validateUser';
+import Carousel from '../Carousel';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import SongList from '../specificResults/SongList';
 function CreateAccount(props){
     const [inputVal , setInputVal] = useState();
     const [checkingUser, setCheckingUser] = useState(false);
     const [password,setPassword] = useState();
     const [passwordOk, setPasswordOk] = useState(false);
     const [password2, setPassword2] = useState();
+    const [email, setEmail] = useState();
+    const [emailOk, setEmailOk] = useState();
     const [identical, setIdentical] = useState(false);
+    const [artistList , setArtistList] = useState();
+    const [preference , setPreference] = useState([]);
     const [userOk , setUserOk] = useState(false);
     let typingTimer;                //timer identifier
     let doneTypingInterval = 1000;  //time 
 
+    useEffect(() => {
+        axios.get('/artists').then(response => {
+            setArtistList(response.data);
+        }).catch(e => {
+            console.log(e);
+        })
+    },[])
     async function checkUserExist(value){
         if(!validateUser(value)){
             setUserOk(false);
@@ -60,12 +73,52 @@ function CreateAccount(props){
         }else{
             setPasswordOk(false);
         }
-    },[password])
+    },[password]);
+
+    function checkEmailExists(email){
+        if(!email || email.indexOf('@') === -1 || email.indexOf('@') <3){
+            return setEmailOk(false);
+        }
+      axios.get(`/emailExists?email=${email}`) .then(response => {
+        const data = response.data;
+        if(data === true){
+            return setEmailOk(false);
+        }else if(data === false){
+            return setEmailOk(true);
+        }else{
+            console.log(data);
+        }
+      }).catch(e=>console.error(e)) 
+    }
+
+    function addPreference(value){
+        let arr = preference.slice();
+        let artistsCopy = artistList.slice();
+        let artistToPick = artistsCopy.find(artist=> artist.artist === value.artist);
+        if(artistToPick){
+            artistToPick.picked = true;
+            console.log(artistsCopy);
+            setArtistList(artistsCopy.slice());
+        }
+        arr.push(value);
+        setPreference(arr);
+    }
+    function removePreference(value){
+        let arr = preference.filter(artist => artist.artist_id !== value.artist_id);
+        let artistsCopy = artistList.slice();
+        let artistToRemove = artistsCopy.find(artist=> artist.artist === value.artist);
+        if(artistToRemove){
+            artistToRemove.picked = false;
+            console.log(artistsCopy);
+            setArtistList(artistsCopy.slice());
+        }
+        setPreference(arr);
+    }
 
     return (
           <div className="container">
             <div className="inputContain">
-                <div className='inputTitle'>USERNAME:</div>
+                <div className='inputTitle'>Username :</div>
                 <input
                 onKeyUp={(e)=>{
                     let value = e.target.value;
@@ -88,19 +141,19 @@ function CreateAccount(props){
                 </div>
             </div>
             <div className="inputContain">
-            <div className='inputTitle'>PASSWORD:</div>
+            <div className='inputTitle'>Password :</div>
                 <input onChange={(e) => setPassword(e.target.value)} className='password' type='password' />
                 <div className='progress'>
                     {passwordOk ?
                         <div className='doneIcon'><DoneIcon color='inherit' /></div>
                         :password&&!passwordOk?
-                        <div className='errorIcon'><CloseIcon color='inherit' /></div>
+                        <div className='errorIcon2'><WarningIcon color='inherit' /></div>
                         :<div className='errorIcon'><ErrorOutlineIcon color='inherit' /></div>
                     }
                 </div>
             </div>
             <div className="inputContain">
-            <div className='inputTitle'>PASSWORD:</div>
+            <div className='inputTitle'>Verify Password :</div>
                 <input
                 onChange={(e) => {setPassword2(e.target.value)}} 
                 className='password' type='password' />
@@ -113,6 +166,32 @@ function CreateAccount(props){
                     }
                 </div>
             </div>
+            <div className="inputContain">
+            <div className='inputTitle'>Email :</div>
+                <input
+                onKeyUp={(e)=>{
+                    let value = e.target.value;
+                    typingTimer = setTimeout(() => {
+                        checkEmailExists(value)
+                        setEmail(value);
+                    },doneTypingInterval)
+                }} 
+                onKeyDown={() => clearTimeout(typingTimer)} 
+                className='email' type='text' />
+                <div className='progress'>
+                    {emailOk ?
+                        <div className='doneIcon'><DoneIcon color='inherit' /></div>
+                        :email&&!emailOk?
+                        <div className='errorIcon'><CloseIcon color='inherit' /></div>
+                        :<div className='errorIcon'><ErrorOutlineIcon color='inherit' /></div>
+                    }
+                </div>
+            </div>
+            
+            {artistList&& <div className='inputTitle'>Pick 3:</div>}
+            {artistList&&
+                <Carousel preference={preference} removePreference={removePreference} addPreference={addPreference} musicObj={artistList} title='none' type='createAcc' />
+            }
                 <div className='CreateAccount'>Create User</div>
                 <div className='requirements'>
                     <div>
