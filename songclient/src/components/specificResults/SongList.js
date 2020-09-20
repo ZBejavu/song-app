@@ -11,6 +11,7 @@ function SongList(props){
     const history = useHistory();
     const location = useLocation();
     const videoElem = useRef(null);
+    const [showSongsAndVideo , setShowSongsAndVideo] = useState(false);
     const params = useParams();
     const qParams = new URLSearchParams(location.search);
     const[songList, setSongList] = useState();
@@ -22,36 +23,49 @@ function SongList(props){
     const [duration, setDuration] = useState();
     useEffect(() => {
         let address;
-        let topSongs, artist, album ,playlist;
-        topSongs = qParams.get('topSongs');
-        album = qParams.get('albumId');
-        artist = qParams.get('artistId');
-        playlist = qParams.get('playlistId');
-        if(topSongs){
-            address = '/top_songs';
-        }else if(album){
-            address = `/songs?albumId=${album}`;
-        }else if(artist){
-            address = `/songs?artistId=${artist}`;
+         let topSongs, artist, album ,playlist;
+         let playingFrom = props.from;
+         if(playingFrom === 'topSongs'){
+             address = '/top_songs';
+         }else if(playingFrom === 'Playlist'){
+             address = `/playlist/${props.id}`;
+         }else if(playingFrom === 'Album'){
+            address = `/songs?albumId=${props.id}`;
+        }else if(playingFrom === 'Artist'){
+            address = `/songs?artistId=${props.id}`;
+        }else{
+            return;
         }
-        else if(playlist){
-            address = `/playlist/${playlist}`;
-        }
+        // topSongs = qParams.get('topSongs');
+        // album = qParams.get('albumId');
+        // artist = qParams.get('artistId');
+        // playlist = qParams.get('playlistId');
+        // if(topSongs === 'topSongs'){
+        //     address = '/top_songs';
+        // }else if(album){
+        //     address = `/songs?albumId=${album}`;
+        // }else if(artist){
+        //     address = `/songs?artistId=${artist}`;
+        // }
+        // else if(playlist){
+        //     address = `/playlist/${playlist}`;
+        // }
         axios.get(address).then((response) => {
         let playingSong;
-        if(playlist){
-            playingSong = response.data.songList.find(song => song.song_id == match.params.id);
+        if(playingFrom === 'Playlist'){
+            playingSong = response.data.songList.find(song => song.song_id == props.songId );//match.params.id);
         }else{
-            playingSong = response.data.find(song => song.song_id == match.params.id);
+            playingSong = response.data.find(song => song.song_id == props.songId );//match.params.id);
         }
         console.log(playingSong);
+        playingFrom==='Playlist'?setSongList(response.data.songList) :setSongList(response.data)
         if(playingSong){
             playingSong.playing=true;
             setUrl(playingSong.youtube_link);
         }
-        playlist?setSongList(response.data.songList) :setSongList(response.data)
+
     })
-    },[])
+    },[props])
     // if(videoElem !== null){
     //     if(videoElem.current !== null){
     //       //setProgress(videoElem.current.getCurrentTime())
@@ -91,11 +105,12 @@ function SongList(props){
 
     return (
         !songList? null :
-          <div className="songList">
-              <div className='videoContainer'><VideoPlayer setDuration={setDuration} setProgress={setProgress} myref={videoElem} setPlaying={setPlaying} playing={playing} nextUrl={nextUrl} url={url} /></div>
+        <>   
+          <div style={showSongsAndVideo?{backgroundColor:'transparent', width:'0%'}:{}} className="songList">
+              <div style={showSongsAndVideo?{display:'none', width:'0%'}:{}} className='videoContainer'><VideoPlayer setDuration={setDuration} setProgress={setProgress} myref={videoElem} setPlaying={setPlaying} playing={playing} nextUrl={nextUrl} url={url} /></div>
                 {
-                    <div className="songContainer">
-                            {/* <button onClick={()=>setShowSongs(true)}>songs</button><button onClick={()=>setShowSongs(false)}>lyrics</button>   */}
+                    <div style={showSongsAndVideo?{display:'none', width:'0%'}:{}} className="songContainer">
+                            <button onClick={()=>setShowSongs(true)}>songs</button><button onClick={()=>setShowSongs(false)}>lyrics</button>  
                             {
                                 showSongs?
                                 songList.map((song,index) => {
@@ -111,16 +126,15 @@ function SongList(props){
                                     </div>
                                 })
                                 :<div>
-                                    <h1>title</h1>
+                                        <div className='lyricTitle'>{songList.filter(song => song.youtube_link === url).map(song=><div style={{margin:'auto'}}><h1>{song.song}</h1>{song.lyrics}</div>)}</div>
                                 </div>
                             }
                     </div>
                 }
-                {/* <div>
-                    <div className='lyricTitle'>{songList.find(song => song.youtube_link === `https://youtu.be/${url}`).song}</div>
-                </div> */}
-          <ControlFooter videoElem={videoElem} duration={duration} progress={progress} shuffle={setShuffleTrue} isPlaying={playing} setPlaying={setPlaying} prevUrl={prevUrl} nextUrl={nextUrl} />
+
+          <ControlFooter toshow={showSongsAndVideo} show={setShowSongsAndVideo} videoElem={videoElem} duration={duration} progress={progress} shuffle={setShuffleTrue} isPlaying={playing} setPlaying={setPlaying} prevUrl={prevUrl} nextUrl={nextUrl} />
           </div>
+        </>
       );
 }
 

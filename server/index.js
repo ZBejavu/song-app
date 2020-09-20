@@ -81,11 +81,13 @@ app.get('/validUser/:token' , async (req , res) => {
         if (error) {
             console.error(error);
             return res.send(error.message);
-        };
-        if(results.length !== 0){
-            return res.send('Yes');
         }
-            res.send('No');
+        
+        if(results.length !== 0){
+            console.log('sending true')
+            return res.send(true);
+        }
+            res.send(false);
       });
 })
 
@@ -111,7 +113,7 @@ app.post('/users' , async (req , res) => {
                 console.error(error);
                 return res.send(error.message);
             };
-                res.send(results);
+                res.send(true);
           });
     }catch{
         res.status(500).send();
@@ -121,9 +123,10 @@ app.post('/users' , async (req , res) => {
 app.post('/login' , async (req, res) => {
     
     let myName = req.body.name ? req.body.name : null;
+    let myPassword = req.body.password ? req.body.password : null;
     console.log(myName);
-    if(myName == null){
-        return res.status(400).send('no name in request body');
+    if(myName == null || myPassword == null){
+        return res.status(400).send('no name or password in request body');
     }
     let query = `SELECT * FROM user WHERE user.name = '${myName}'`;
     
@@ -136,8 +139,8 @@ app.post('/login' , async (req, res) => {
             return res.send('Cannot find User');
         }
             try{
-               if(await bcrypt.compare(req.body.password, results[0].password)){
-                   res.json({"connection" :"success", "token":`${results[0].remember_token}`})
+               if(await bcrypt.compare(myPassword, results[0].password)){
+                   res.json({"connection" : true, "token":`${results[0].remember_token}`})
                } else {
                    res.send('Incorrect password')
                }

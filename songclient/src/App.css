@@ -137,6 +137,7 @@ body{
   text-decoration: none;
   font-weight: 500;
   font-size: 25px;
+  width:fit-content;
   color: #d0d0e6;
   display: block;
   transition-duration: 0.1s;
@@ -156,9 +157,10 @@ body{
   height:100%;
 }
 .main2 {
-  margin-top: 15vh; /* Same as the width of the sidebar */
+  margin-top: 13vh;
+  padding-bottom: 13vh; /* Same as the width of the sidebar */
   margin-right: 0;
-  height:85vh;
+  height:100%;
   width:100%;
 }
 .myLogo{

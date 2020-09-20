@@ -9,12 +9,21 @@ function Navbar2(props){
           <div className="sidenav2">
             <img className='myLogo2' src={logo}/>
             <div className="sidenav2Container">
+              {props.authorized?
+              <>
                 <Link to="/">Home</Link>
                 <a href="#">Search</a>
                 <a href="#">Songs</a>
                 <a href="#">Artists</a>
                 <a href="#">Playlists</a>
-                <MusicModal url={props.link}/>
+                <a onClick={() => {{localStorage.clear(); props.setAuthorized(false)}}} href="#">Log Out</a>
+              </>
+              :
+              <>
+                <Link to="/CreateAccount">Create Account</Link>
+                <Link to="/Login">Login</Link>
+              </>
+              }
             </div>
           </div>
       );

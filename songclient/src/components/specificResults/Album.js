@@ -1,13 +1,16 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
+import {Link,useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import PlayerContext from '../PlayerContext'
 import './Specific.css';
 import SongContainer from '../SongContainer';
-function Album(props){
+function Album(){
     const[albumObj , setAlbumObj] = useState();
     const[link, setLink] = useState();
+    const match = useRouteMatch();
+    const player = useContext(PlayerContext);
     useEffect(() => {
-        const id = props.match.params.id;
+        const id = match.params.id;
         try{
             let getalbum,getAlbums;
             getalbum = axios.get(`/album/${id}`);

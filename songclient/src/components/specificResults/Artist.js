@@ -1,16 +1,18 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
 import '../Top.css';
 import './Specific.css';
 import Carousel from '../Carousel';
 import SongContainer from '../SongContainer';
 import errorImage from '../../albumCover/errorImage.png';
-function Artist(props){
+import PlayerContext from '../PlayerContext'
+import {Link,useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+function Artist(){
     const[artistObj , setArtistObj] = useState();
     const[carousel,setCarousel] = useState({from:0,to:5});
+    const match = useRouteMatch();
     useEffect(() => {
-        const id = props.match.params.id;
+        const id = match.params.id;
         try{
             let getArtist,getAlbums,getSongs;
             getArtist = axios.get(`/artist/${id}`);

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import MusicModal from './musicModal';
 import {Link} from 'react-router-dom';
 import errorImage from '../albumCover/errorImage.png';
@@ -6,10 +6,12 @@ import playlistImage from '../albumCover/playlistImage.png';
 import picked from '../albumCover/picked.png';
 import { Icon } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import PlayerContext from './PlayerContext'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-function Carousel({musicObj , type , title , addPreference, removePreference, preference}){
+function Carousel({musicObj , type , title , addPreference, removePreference, preference }){
 
     const[carousel,setCarousel] = useState({from:0,to:5});
+    const player = useContext(PlayerContext);
     function carouselSetter(value){
         if(value ==='forward'){
             setCarousel({from:carousel.from+5, to:carousel.to+5})
@@ -35,6 +37,7 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={album.album_img} alt={`${album.album}Cover`} className ='specificImage' /></div>
                             <Link to={`/Album/${album.album_id}`}><div className ='specificName' onClick={() => console.log(album)}>{album["album"]}</div></Link>
+                            {/* <Link to={`/Album/${album.album_id}`}><div className ='specificName' onClick={() => console.log(album)}>{album["album"]}</div></Link> */}
                             </div>
                         }))
                     }
@@ -63,7 +66,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         myList.slice(carousel.from,carousel.to).map(song => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={song.artist_img} alt={`${song.song}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Song/${song.song_id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song["song"]}</div></Link>
+                            <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.song_id}); player.setPlay(true)}}>{song["song"]}</div>
+                            {/* <Link to={`/Song/${song.song_id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song["song"]}</div></Link> */}
                             </div>
                         }))
                     }

@@ -79,6 +79,7 @@
     margin-top: 5%;
     color:rgb(255, 255, 255);
     font-size: 0.8rem;
+    text-align: center;
     text-overflow: ellipsis;
     white-space:nowrap;
     overflow: hidden;
@@ -142,6 +143,12 @@
     color:transparent;
     margin:auto;
   }
+  .songList{
+    position: fixed;
+    top: 8vh;
+    background-color: #131313;
+    left:0;
+  }
   .listContainer2:hover .play,.listContainer:hover .play{
     color:rgb(66, 157, 199);
     color:rgb(148, 34, 34);
@@ -178,4 +185,13 @@
   margin:auto;
   cursor: default;
   color:rgb(189, 186, 186)
+}
+
+.lyricTitle{
+  display: flex;
+  margin: auto;
+  width:80%;
+  height:30%;
+  text-align: center;
+  overflow-y: scroll;
 }

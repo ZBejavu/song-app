@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect , useContext} from 'react';
 import axios from 'axios';
 import logo from '../albumCover/logoImage.png';
 import {Link} from 'react-router-dom';
@@ -14,8 +14,9 @@ function HomePage(){
             topArtists:[],
             topAlbums:[],
             topSongs:[],
-            topPlaylists:[]
+            topPlaylists:[],
         }
+        
         try{
             let promise1,promise2,promise3,promise4;
             promise1 =axios.get('/top_artists')
