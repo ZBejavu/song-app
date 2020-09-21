@@ -74,7 +74,7 @@ function App() {
                 <Login setAuthorized={setAuthorized} />
               </Route>
               <Route>
-                <div>
+                <div className='lostPage'>
                   ERROR 404, Page Not Found!
                 </div>
               </Route> 

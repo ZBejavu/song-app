@@ -151,10 +151,13 @@
   }
   .listContainer2:hover .play,.listContainer:hover .play{
     color:rgb(66, 157, 199);
-    color:rgb(148, 34, 34);
     transition-duration: 0.5s;
     filter:brightness(120%);
     cursor:pointer;
+  }
+  .listContainer2:hover{
+    background-color: rgb(177, 33, 33);
+    transition-duration: 0.4s;
   }
 
   .nameAndArtist{

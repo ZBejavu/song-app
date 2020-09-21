@@ -109,7 +109,7 @@ function SongList(props){
                             {
                                 showSongs?
                                 songList.map((song,index) => {
-                                    return <div className ='listContainer2' style={song.playing ? {backgroundColor:'rgb(78, 78, 78)'}:{backgroundColor:'transparent'}}>
+                                    return <div className ='listContainer2' style={song.playing ? {backgroundColor:'rgb(78, 78, 78)'}:{}}>
                                         <div className='index'>{index+1}.</div>
                                 <div className='play' style={song.playing ? {color:'rgb(148, 34, 34)'}:{backgroundColor:'transparent'}} onClick={()=>{setUrl(song.youtube_link)}}>{song.playing&&playing?<EqualizerIcon />:<PlayArrowIcon />}</div>
                                         {/* <div onClick={()=>{proper.func(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div> */}
@@ -121,7 +121,7 @@ function SongList(props){
                                     </div>
                                 })
                                 :<div>
-                                        <div className='lyricTitle'>{songList.filter(song => song.youtube_link === url).map(song=><div style={{margin:'auto'}}><h1>{song.song}</h1>{song.lyrics}</div>)}</div>
+                                        <div className='lyricTitle'>{songList.filter(song => song.youtube_link === url).map(song=><div style={{margin:'auto', fontWeight:'500', fontSize:'1.2rem', color:'rgb(213, 213, 213)'}}><h1>{song.song}</h1>{song.lyrics}</div>)}</div>
                                 </div>
                             }
                     </div>

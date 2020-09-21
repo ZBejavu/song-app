@@ -19,9 +19,6 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
             setCarousel({from:carousel.from-5, to:carousel.to-5})
         }
     }
-    useEffect(() => {
-        console.log(musicObj)
-    },[musicObj])
     console.log(carousel);
     const myList = type==='artist' ? musicObj.albums : musicObj;
     return (

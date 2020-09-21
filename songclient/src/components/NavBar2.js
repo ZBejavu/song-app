@@ -12,10 +12,10 @@ function Navbar2(props){
               {props.authorized?
               <>
                 <Link to="/">Home</Link>
-                <a href="#">Search</a>
+                {/* <a href="#">Search</a>
                 <a href="#">Songs</a>
                 <a href="#">Artists</a>
-                <a href="#">Playlists</a>
+                <a href="#">Playlists</a> */}
                 <a onClick={() => {{localStorage.clear(); props.setAuthorized(false)}}} href="#">Log Out</a>
               </>
               :
