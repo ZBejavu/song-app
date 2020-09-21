@@ -5,7 +5,7 @@
     margin-left:-10px;
     font-size: 50px;
     display:flex;
-    background-color: #343435;
+    background-color: #292828;
     padding: 0px 0px 0px 0px;
     color: rgb(231, 228, 228);
     border-radius: 5px;
@@ -19,10 +19,13 @@
     width: 25%;
   }
   .smallerDetails{
-      font-size: 30px;
+      font-size: 1.3rem;
   }
   .info{
-      padding: 20px;
+      padding-left: 20px;
+  }
+  .artistTitle{
+    font-size: 2rem;
   }
   .specificArtist{
       margin: 20px 20px;
@@ -32,31 +35,33 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    overflow:scroll; 
-    overflow: auto;
-    height:450px;
-    width:100vw;
+    margin-left: 10%;
+    height:25%;
+    width:100%;
   }
   .specContainer{
     margin-top: 5%;
+    width: 90%;
+    flex-wrap: wrap;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-evenly;
   }
   .speclistContainer{
-    height:50vh;
-    width:22%;
-    border-radius: 50px;
+    width:17%;
     font-weight: 500;
-    margin-bottom: 5px;
+    padding-top:1%;
+    border-radius: 5%;
     /* background-color: rgb(87, 85, 182); */
-    background-color: transparent;
+    background-color: rgb(85, 84, 84);
+    margin-left: 1%;
+    margin-right: 1%;
     /* background-color:  #202020; */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
   }
   .itemName{
@@ -73,6 +78,12 @@
   .specificName{
     margin-top: 5%;
     color:rgb(255, 255, 255);
+    font-size: 0.8rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
+    width:90%; 
   }
   .specificName:hover{
     color:rgb(124, 124, 124);
@@ -91,28 +102,99 @@
     font-size: 45px;
     font-weight: 500;
     align-self: start;
+    margin-left: 10%;
     text-align: center;
+    margin-bottom: 2%;
+  }
+  .songContainer{
+    width:100%;
+    height:80%;
+    overflow-y: scroll;
+    align-items: flex-end;
+  }
+  .carouselContainer{
     margin-bottom: 5%;
   }
-  
   .specResultContainer{
     display:flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 5%;
+    width:95%;
+    margin-bottom: 2%;
     padding-left: 2%;
-    padding-right: 2%;
-    border-radius: 5px;
     /* background-color: rgb(69, 68, 104); */
     background-color:  transparent;
     color: white;
   }
-
-  .play{
-    color:white;
+  .slideButton{
+    transition-duration: 0.2s;
   }
-  .play:hover{
-    color:rgb(157, 211, 146);
+  .slideButton:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+  }
+  .index{
+    cursor: default;
+    margin:auto;
+    color:white;
+    font-size: 1rem;
+  }
+  .play{
+    color:transparent;
+    margin:auto;
+  }
+  .songList{
+    position: fixed;
+    top: 8vh;
+    background-color: #131313;
+    left:0;
+  }
+  .listContainer2:hover .play,.listContainer:hover .play{
+    color:rgb(66, 157, 199);
+    transition-duration: 0.5s;
     filter:brightness(120%);
     cursor:pointer;
   }
+  .listContainer2:hover{
+    background-color: rgb(177, 33, 33);
+    transition-duration: 0.4s;
+  }
+
+  .nameAndArtist{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    width:65%;
+  }
+
+  .nameAndArtist .itemName {
+    width:100%;
+    height:50%;
+  }
+  .nameAndArtist a {
+    width:30%;
+    height:50%;
+  }
+  .nameAndArtist .artistOfSong{
+      color:rgb(151, 151, 151);
+      padding-left: 10%;
+  }
+
+  .artistOfSong{
+    font-size: 13px;
+}
+.songLength{
+  margin:auto;
+  cursor: default;
+  color:rgb(189, 186, 186)
+}
+
+.lyricTitle{
+  display: flex;
+  margin: auto;
+  width:80%;
+  height:30%;
+  text-align: center;
+  overflow-y: scroll;
+}

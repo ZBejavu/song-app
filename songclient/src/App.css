@@ -59,7 +59,7 @@
 }
 
 body{
-  background-color: #181818;
+  background-color: #131313;
   /* background-color: #4c4d8f; */
 }
 .searchResultContainer{
@@ -114,16 +114,15 @@ body{
   padding-top: 0;
 }
 .sidenav2 {
-  height: 120px; /* Full-height: remove this if you want "auto" height */
-  width: 100vw;
+  height: 13vh; /* Full-height: remove this if you want "auto" height */
+  width: 100%;
   display: flex;
   align-items: center; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: rgb(12, 12, 12); /* Black */
-  overflow-x: hidden; /* Disable horizontal scroll */
+  background-color: rgb(12, 12, 12); /* Black */ /* Disable horizontal scroll */
   padding-top: 0;
 }
 .sidenav2Container{
@@ -138,6 +137,7 @@ body{
   text-decoration: none;
   font-weight: 500;
   font-size: 25px;
+  width:fit-content;
   color: #d0d0e6;
   display: block;
   transition-duration: 0.1s;
@@ -157,16 +157,17 @@ body{
   height:100%;
 }
 .main2 {
-  margin-top: 120px; /* Same as the width of the sidebar */
-  padding: 0px 10px;
+  margin-top: 13vh;
+  padding-bottom: 13vh; /* Same as the width of the sidebar */
+  margin-right: 0;
   height:100%;
-  width:100vw;
+  width:100%;
 }
 .myLogo{
-  width:65%;
+  width:60%;
   padding-left: 32px;
   padding-top: 0;
-  margin-top: -30px;
+  margin-top: -30%;
 }
 .myLogo2{
   width:10vw;
@@ -176,5 +177,14 @@ body{
 }
 .App{
   margin-top: 0%;
+}
+
+.lostPage{
+  margin-top:25vh;
+  font-size: 6vw;
+  color:rgb(145, 14, 14);
+  font-weight: 500;
+  text-align: center;
+
 }
 

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
+const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 app.use(express.static('../songclient/build'));
 app.use(express.json());
@@ -18,6 +19,140 @@ mysqlCon.connect(err => {
     if (err) throw err;
     console.log("Connected!");
 });
+
+let users = [{"name":"Zach", "password":"pass"}];
+
+app.get('/users' , (req , res) => {
+    res.json(users);
+})
+
+app.get('/userexists/:name' , async (req , res) => {
+    let myName = req.params.name ? req.params.name : null;
+    console.log(myName);
+    if(myName === null){
+        return res.status(400).send('no name in request params');
+    }
+    let query = `SELECT * FROM user WHERE user.name = '${myName}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length !== 0){
+            return res.send(true);
+        }
+            res.send(false);
+      });
+})
+
+app.get('/emailExists', (req,res) => {
+    let myEmail = req.query.email ? req.query.email : null;
+    if(myEmail == undefined){
+        return res.status(400).send('no email in request query');
+    }
+    let query = `SELECT * FROM user WHERE user.email = '${myEmail}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length !== 0){
+            return res.send(true);
+        }
+            res.send(false);
+      });
+})
+
+app.get('/validUser/:token' , async (req , res) => {
+    let myToken = req.params.token ? req.params.token : null;
+    let myUsername = req.query.name ? req.query.name : null;
+    console.log(myToken);
+    if(myToken === null){
+        return res.status(400).send('no token in request params');
+    }
+    if(myUsername === null){
+        return res.status(400).send('no user in request params');
+    }
+    let query = `SELECT * FROM user WHERE user.remember_token = '${myToken}' AND user.name = '${myUsername}'`;
+    
+    mysqlCon.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        }
+        
+        if(results.length !== 0){
+            console.log('sending true')
+            return res.send(true);
+        }
+            res.send(false);
+      });
+})
+
+app.post('/users' , async (req , res) => {
+    try{
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        console.log(salt);
+        console.log(hashedPassword);
+        const user = { 
+            name: req.body.name,
+            email: req.body.email, 
+            password: hashedPassword,
+            is_admin: req.body.is_admin || 0,
+            preferences: req.body.preferences,
+            remember_token: hashedPassword.slice(0,Math.round(hashedPassword.length/2))
+            }
+        
+        let query = `INSERT INTO user SET ?`;
+        
+        mysqlCon.query(query , user , (error, results, fields) => {
+            if (error) {
+                console.error(error);
+                return res.send(error.message);
+            };
+                res.send(true);
+          });
+    }catch{
+        res.status(500).send();
+    }
+})
+
+app.post('/login' , async (req, res) => {
+    
+    let myName = req.body.name ? req.body.name : null;
+    let myPassword = req.body.password ? req.body.password : null;
+    console.log(myName);
+    if(myName == null || myPassword == null){
+        return res.status(400).send('no name or password in request body');
+    }
+    let query = `SELECT * FROM user WHERE user.name = '${myName}'`;
+    
+    mysqlCon.query(query, async (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            return res.send(error.message);
+        };
+        if(results.length === 0){
+            return res.send('Cannot find User');
+        }
+            try{
+               if(await bcrypt.compare(myPassword, results[0].password)){
+                   res.json({"connection" : true, "token":`${results[0].remember_token}`})
+               } else {
+                   res.send('Incorrect password')
+               }
+            } catch {
+                res.status(500).send();
+            }
+      });
+
+})
+
+
+
 
 app.get('/generalSearch', (req , res) => {
     let searchVal = req.query.generalSearch || '';
@@ -44,10 +179,15 @@ app.get('/generalSearch', (req , res) => {
 
 app.get('/songs', (req, res) => {
     let query = 'SELECT * FROM song';
-    let myId = req.query.albumId? Number(req.query.albumId) :0;
-    console.log(myId);
-    if(myId != 0){
+    let myId ='';
+    let myAlbumId = req.query.albumId? Number(req.query.albumId) :0;
+    let myArtistId = req.query.artistId? Number(req.query.artistId) :0;
+    if(myAlbumId != 0){
+        myId = myAlbumId;
         query = 'SELECT song.*,artist.artist FROM song join artist on artist.artist_id = song.artist_id WHERE song.album_id = ?';
+    }else if(myArtistId != 0){
+        myId = myArtistId;
+        query = 'SELECT song.*,artist.artist,album.album FROM song join artist on artist.artist_id = song.artist_id join album on album.album_id = song.album_id WHERE song.artist_id = ?';
     }
     mysqlCon.query(query,[myId] ,(error, results, fields) => {
         if (error) {
@@ -134,9 +274,11 @@ app.get('/playlist/:id' , (req , res) => {
             return res.send(error.message);
         };
         let playlistObj = {info: results[0], songList:[]};
-        let query = `select song.* from songs_in_playlist
+        let query = `select song.*,album.album,playlist_id from songs_in_playlist
         join song 
         on songs_in_playlist.song_id = song.song_id
+        join album 
+        on song.album_id = album.album_id
         where songs_in_playlist.playlist_id = ${req.params.id};`
         mysqlCon.query(query, (error, results, fields) => {
             if (error) {
@@ -171,7 +313,7 @@ app.get('/top_albums', (req , res) => {
 })
 
 app.get('/top_artists', (req , res) => {
-    mysqlCon.query('SELECT * FROM artist LIMIT 20', (error, results, fields) => {
+    mysqlCon.query('SELECT * FROM artist ORDER BY artist.artist LIMIT 24', (error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(error.message);
