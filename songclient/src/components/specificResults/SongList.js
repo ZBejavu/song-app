@@ -25,40 +25,40 @@ function SongList(props){
         let address;
          let topSongs, artist, album ,playlist;
          let playingFrom = props.from;
-         if(playingFrom === 'topSongs'){
-             address = '/top_songs';
-         }else if(playingFrom === 'Playlist'){
-             address = `/playlist/${props.id}`;
-         }else if(playingFrom === 'Album'){
-            address = `/songs?albumId=${props.id}`;
-        }else if(playingFrom === 'Artist'){
-            address = `/songs?artistId=${props.id}`;
-        }else{
-            return;
+        //  if(playingFrom === 'topSongs'){
+        //      address = '/top_songs';
+        //  }else if(playingFrom === 'Playlist'){
+        //      address = `/playlist/${props.id}`;
+        //  }else if(playingFrom === 'Album'){
+        //     address = `/songs?albumId=${props.id}`;
+        // }else if(playingFrom === 'Artist'){
+        //     address = `/songs?artistId=${props.id}`;
+        // }else{
+        //     return;
+        // }
+        topSongs = qParams.get('topSongs');
+        album = qParams.get('albumId');
+        artist = qParams.get('artistId');
+        playlist = qParams.get('playlistId');
+        if(topSongs){
+            address = '/top_songs';
+        }else if(album){
+            address = `/songs?albumId=${album}`;
+        }else if(artist){
+            address = `/songs?artistId=${artist}`;
         }
-        // topSongs = qParams.get('topSongs');
-        // album = qParams.get('albumId');
-        // artist = qParams.get('artistId');
-        // playlist = qParams.get('playlistId');
-        // if(topSongs === 'topSongs'){
-        //     address = '/top_songs';
-        // }else if(album){
-        //     address = `/songs?albumId=${album}`;
-        // }else if(artist){
-        //     address = `/songs?artistId=${artist}`;
-        // }
-        // else if(playlist){
-        //     address = `/playlist/${playlist}`;
-        // }
+        else if(playlist){
+            address = `/playlist/${playlist}`;
+        }
         axios.get(address).then((response) => {
         let playingSong;
-        if(playingFrom === 'Playlist'){
-            playingSong = response.data.songList.find(song => song.song_id == props.songId );//match.params.id);
+        if(playlist){ //playingFrom === 'Playlist'
+            playingSong = response.data.songList.find(song => song.song_id == match.params.id); //props.songId );
         }else{
-            playingSong = response.data.find(song => song.song_id == props.songId );//match.params.id);
+            playingSong = response.data.find(song => song.song_id == match.params.id); //props.songId );
         }
         console.log(playingSong);
-        playingFrom==='Playlist'?setSongList(response.data.songList) :setSongList(response.data)
+        playlist?setSongList(response.data.songList) :setSongList(response.data) //playingFrom==='Playlist'
         if(playingSong){
             playingSong.playing=true;
             setUrl(playingSong.youtube_link);
@@ -66,11 +66,6 @@ function SongList(props){
 
     })
     },[props])
-    // if(videoElem !== null){
-    //     if(videoElem.current !== null){
-    //       //setProgress(videoElem.current.getCurrentTime())
-    //     }
-    //   }
 
     function nextUrl(){
         let shuffle = shuffleTrue? Math.floor(Math.random()*songList.length) : null;

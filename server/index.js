@@ -313,7 +313,7 @@ app.get('/top_albums', (req , res) => {
 })
 
 app.get('/top_artists', (req , res) => {
-    mysqlCon.query('SELECT * FROM artist LIMIT 24', (error, results, fields) => {
+    mysqlCon.query('SELECT * FROM artist ORDER BY artist.artist LIMIT 24', (error, results, fields) => {
         if (error) {
             console.error(error);
             return res.send(error.message);
