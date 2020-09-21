@@ -30,8 +30,10 @@ function App() {
     try{
       axios.get(`/validUser/${token}?name=${name}`).then(response => {
         if(response.status == '400'){
+          setPlay(false);
           return setAuthorized(false);        
         }else if(response.data === false){
+          setPlay(false);
           return setAuthorized(false);
         }
         setAuthorized(true);
@@ -40,15 +42,16 @@ function App() {
       console.log(e);
     }  
   }
+  
   useEffect(()=>{
     checkAuthorized();
-  })
+  },[definitions,play])
 
   return (
     <Router>
       <div className="App">
         
-        <NavBar2 setAuthorized={setAuthorized} authorized={authorized} link ={link} />
+        <NavBar2 setPlay={setPlay} setAuthorized={setAuthorized} authorized={authorized} link ={link} />
         <div class="main2">
         <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
           <Switch>

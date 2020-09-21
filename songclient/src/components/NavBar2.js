@@ -16,7 +16,7 @@ function Navbar2(props){
                 <a href="#">Songs</a>
                 <a href="#">Artists</a>
                 <a href="#">Playlists</a>
-                <a onClick={() => {{localStorage.clear(); props.setAuthorized(false)}}} href="#">Log Out</a>
+                <a onClick={() => {{localStorage.clear(); props.setPlay(false); props.setAuthorized(false)}}} href="#">Log Out</a>
               </>
               :
               <>
