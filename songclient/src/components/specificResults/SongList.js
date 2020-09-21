@@ -25,40 +25,40 @@ function SongList(props){
         let address;
          let topSongs, artist, album ,playlist;
          let playingFrom = props.from;
-        //  if(playingFrom === 'topSongs'){
-        //      address = '/top_songs';
-        //  }else if(playingFrom === 'Playlist'){
-        //      address = `/playlist/${props.id}`;
-        //  }else if(playingFrom === 'Album'){
-        //     address = `/songs?albumId=${props.id}`;
-        // }else if(playingFrom === 'Artist'){
-        //     address = `/songs?artistId=${props.id}`;
-        // }else{
-        //     return;
+         if(playingFrom === 'topSongs'){
+             address = '/top_songs';
+         }else if(playingFrom === 'Playlist'){
+             address = `/playlist/${props.id}`;
+         }else if(playingFrom === 'Album'){
+            address = `/songs?albumId=${props.id}`;
+        }else if(playingFrom === 'Artist'){
+            address = `/songs?artistId=${props.id}`;
+        }else{
+            return;
+        }
+        // topSongs = qParams.get('topSongs');
+        // album = qParams.get('albumId');
+        // artist = qParams.get('artistId');
+        // playlist = qParams.get('playlistId');
+        // if(topSongs){
+        //     address = '/top_songs';
+        // }else if(album){
+        //     address = `/songs?albumId=${album}`;
+        // }else if(artist){
+        //     address = `/songs?artistId=${artist}`;
         // }
-        topSongs = qParams.get('topSongs');
-        album = qParams.get('albumId');
-        artist = qParams.get('artistId');
-        playlist = qParams.get('playlistId');
-        if(topSongs){
-            address = '/top_songs';
-        }else if(album){
-            address = `/songs?albumId=${album}`;
-        }else if(artist){
-            address = `/songs?artistId=${artist}`;
-        }
-        else if(playlist){
-            address = `/playlist/${playlist}`;
-        }
+        // else if(playlist){
+        //     address = `/playlist/${playlist}`;
+        // }
         axios.get(address).then((response) => {
         let playingSong;
-        if(playlist){ //playingFrom === 'Playlist'
-            playingSong = response.data.songList.find(song => song.song_id == match.params.id); //props.songId );
+        if(playingFrom === 'Playlist'){ //playlist
+            playingSong = response.data.songList.find(song => song.song_id == props.songId );//match.params.id); 
         }else{
-            playingSong = response.data.find(song => song.song_id == match.params.id); //props.songId );
+            playingSong = response.data.find(song => song.song_id == props.songId );//match.params.id); 
         }
         console.log(playingSong);
-        playlist?setSongList(response.data.songList) :setSongList(response.data) //playingFrom==='Playlist'
+        playingFrom==='Playlist'?setSongList(response.data.songList) :setSongList(response.data) // playlist
         if(playingSong){
             playingSong.playing=true;
             setUrl(playingSong.youtube_link);

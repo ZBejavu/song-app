@@ -66,8 +66,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         myList.slice(carousel.from,carousel.to).map(song => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={song.artist_img} alt={`${song.song}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Song/${song.song_id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song["song"]}</div></Link>
-                            {/* <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.song_id}); player.setPlay(true)}}>{song["song"]}</div> */}
+                            <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.song_id}); player.setPlay(true)}}>{song["song"]}</div>
+                            {/* <Link to={`/Song/${song.song_id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song["song"]}</div></Link> */}
                             </div>
                         }))
                     }
