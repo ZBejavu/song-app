@@ -16,7 +16,7 @@ import Login from './components/userRelated/Login';
 
 function App() {
   const [link, setLink] = useState();
-  const [authorized , setAuthorized] = useState(false);
+  const [authorized , setAuthorized] = useState(true);
   const [play , setPlay] = useState(false);
   const [definitions, setDefinitions] = useState({from:'topSongs', songId:'4' , id:'4'});
   const value=0;
@@ -47,11 +47,11 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {!authorized ? <Redirect to="/Login" />:<Redirect to="/" />}
+        
         <NavBar2 setAuthorized={setAuthorized} authorized={authorized} link ={link} />
         <div class="main2">
+        <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
           <Switch>
-            <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
               <Route path="/" exact >
               {!authorized ? <Redirect to="/Login" />:<HomePage />}
               </Route>
@@ -73,8 +73,13 @@ function App() {
               <Route path="/Login">
                 <Login setAuthorized={setAuthorized} />
               </Route>
-            </PlayerProvider>
+              <Route>
+                <div>
+                  ERROR 404, Page Not Found!
+                </div>
+              </Route> 
           </Switch>
+          </PlayerProvider>
         </div>
           {play&&<SongList from={definitions.from} songId={definitions.songId} id={definitions.id} />}
       </div>
