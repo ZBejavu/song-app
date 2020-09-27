@@ -12,11 +12,16 @@ function Album(props){
     useEffect(() => {
         const id = match.params.id;
         try{
-            let getplaylist = axios.get(`/playlist/${id}`).then(result =>{
-                if(!result.data.info){
-                    return ;
+            let getPlaylist = axios.get(`/api/playlists/${id}`);
+            let getSongsInPlaylist = axios.get(`/api/playlists/${id}/songs`);
+            Promise.all([getPlaylist, getSongsInPlaylist]).then(values => {
+                let playlistToSet ={
+                    info: values[0].data,
+                    songList: values[1].data
                 }
-                setPlaylistObj(result.data)
+                setPlaylistObj(playlistToSet);
+            }).catch(e => {
+                console.error(e);
             })
         }catch(e){
             console.log(e);
@@ -27,11 +32,11 @@ function Album(props){
         !playlistObj ? null 
         :<div className="specificArtist">
             <div className='specificHeader'>
-                <img className="specImage" src = {`${playlistObj.info['cover_img']}`} onError={(e)=>{e.target.src=playlistImage}} />
+                <img className="specImage" src = {`${playlistObj.info.coverImg}`} onError={(e)=>{e.target.src=playlistImage}} />
                 <div className="info">
                     <div>{playlistObj.info.name}</div>
                     <div className='smallerDetails'>
-                        <div>Created at : {playlistObj.info.created_at.slice(0,10)}</div>
+                        <div>Created at : {playlistObj.info.createdAt.slice(0,10)}</div>
                     </div>
                 </div>
             </div>

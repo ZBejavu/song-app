@@ -26,17 +26,25 @@ function App() {
   const checkAuthorized = async () => {
     const token = localStorage.getItem('token');
     const name = localStorage.getItem('name');
-    console.log(name, token);
+    if(!name || !token){
+      return setAuthorized(false);
+    }
+    const body = {token, name};
+    console.log(body);
     try{
-      axios.get(`/validUser/${token}?name=${name}`).then(response => {
+      axios.post('/api/users/validUser',{
+        token: token,
+        name: name
+      }).then(response => {
         if(response.status == '400'){
           return setAuthorized(false);        
         }else if(response.data === false){
           return setAuthorized(false);
         }
         setAuthorized(true);
-      })
+      }).catch(e => {console.error(e); setAuthorized(false);})
     }catch(e){
+      setAuthorized(false)
       console.log(e);
     }  
   }
@@ -49,7 +57,7 @@ function App() {
       <div className="App">
         
         <NavBar2 setAuthorized={setAuthorized} authorized={authorized} link ={link} />
-        <div class="main2">
+        <div className="main2">
         <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
           <Switch>
               <Route path="/" exact >
@@ -73,7 +81,7 @@ function App() {
               <Route path="/Login">
                 <Login setAuthorized={setAuthorized} />
               </Route>
-              <Route>
+              <Route path="/">
                 <div className='lostPage'>
                   ERROR 404, Page Not Found!
                 </div>

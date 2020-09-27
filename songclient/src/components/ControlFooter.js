@@ -39,7 +39,7 @@ function Navbar2(props){
               <div className='playSeconds'>{secondsToDisplay}</div>
             </div>
             <div className="ControlContainer">
-                <ShuffleIcon fontSize='primary' color='primary' onClick={(e) => props.shuffle((shuffle)=> !shuffle)} />
+                <ShuffleIcon fontSize='large' color='primary' onClick={(e) => props.shuffle((shuffle)=> !shuffle)} />
                 <SkipPreviousIcon fontSize='large' color='primary' onClick={() => props.prevUrl()} />
                 {props.isPlaying ? <PauseIcon fontSize='large' color='primary' onClick={() => props.setPlaying((playing) => !playing)} /> 
                 :<PlayCircleFilledIcon fontSize='large' color='primary' onClick={() => props.setPlaying((playing) => !playing)} />}

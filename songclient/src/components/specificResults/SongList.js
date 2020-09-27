@@ -41,27 +41,27 @@ function SongList(props){
         artist = qParams.get('artistId');
         playlist = qParams.get('playlistId');
         if(topSongs){
-            address = '/top_songs';
+            address = '/api/songs/topSongs';
         }else if(album){
-            address = `/songs?albumId=${album}`;
+            address = `/api/songs/songsFromAlbum/${album}`;
         }else if(artist){
-            address = `/songs?artistId=${artist}`;
+            address = `/api/songs/songsFromArtist/${artist}`;
         }
         else if(playlist){
-            address = `/playlist/${playlist}`;
+            address = `/api/playlists/${playlist}/songs`;
         }
         axios.get(address).then((response) => {
         let playingSong;
         if(playlist){ //playingFrom === 'Playlist'
-            playingSong = response.data.songList.find(song => song.song_id == match.params.id); //props.songId );
+            playingSong = response.data.find(song => song.id == match.params.id); //props.songId );
         }else{
-            playingSong = response.data.find(song => song.song_id == match.params.id); //props.songId );
+            playingSong = response.data.find(song => song.id == match.params.id); //props.songId );
         }
         console.log(playingSong);
-        playlist?setSongList(response.data.songList) :setSongList(response.data) //playingFrom==='Playlist'
+        playlist?setSongList(response.data) :setSongList(response.data) //playingFrom==='Playlist'
         if(playingSong){
             playingSong.playing=true;
-            setUrl(playingSong.youtube_link);
+            setUrl(playingSong.youtubeLink);
         }
 
     })
@@ -69,19 +69,19 @@ function SongList(props){
 
     function nextUrl(){
         let shuffle = shuffleTrue? Math.floor(Math.random()*songList.length) : null;
-        let index = songList.findIndex(song => song.youtube_link === url);
+        let index = songList.findIndex(song => song.youtubeLink === url);
         if(index === songList.length-1){
             return;
         }
-        setUrl(songList[shuffle? shuffle : index+1].youtube_link)
+        setUrl(songList[shuffle? shuffle : index+1].youtubeLink)
     }
     function prevUrl(){
         let shuffle = shuffleTrue? Math.floor(Math.random()*songList.length) : null;
-        let index = songList.findIndex(song => song.youtube_link === url);
+        let index = songList.findIndex(song => song.youtubeLink === url);
         if(index === 0){
             return;
         }
-        setUrl(songList[shuffle? shuffle : index-1].youtube_link)
+        setUrl(songList[shuffle? shuffle : index-1].youtubeLink)
     }
     useEffect(() => {
         if(songList){
@@ -90,7 +90,7 @@ function SongList(props){
             if(lastPlayed){
                 lastPlayed.playing=false;
             }
-            let playingSong = arr.find(song => song.youtube_link === url);
+            let playingSong = arr.find(song => song.youtubeLink === url);
             if(playingSong){
                 playingSong.playing=true;
             }
@@ -111,17 +111,18 @@ function SongList(props){
                                 songList.map((song,index) => {
                                     return <div className ='listContainer2' style={song.playing ? {backgroundColor:'rgb(78, 78, 78)'}:{}}>
                                         <div className='index'>{index+1}.</div>
-                                <div className='play' style={song.playing ? {color:'rgb(148, 34, 34)'}:{backgroundColor:'transparent'}} onClick={()=>{setUrl(song.youtube_link)}}>{song.playing&&playing?<EqualizerIcon />:<PlayArrowIcon />}</div>
-                                        {/* <div onClick={()=>{proper.func(song.youtube_link.slice(17,song.youtube_link.length))}}>Play</div> */}
+                                <div className='play' style={song.playing ? {color:'rgb(148, 34, 34)'}:{backgroundColor:'transparent'}} onClick={()=>{setUrl(song.youtubeLink)}}>{song.playing&&playing?<EqualizerIcon />:<PlayArrowIcon />}</div>
+                                        {/* <div onClick={()=>{proper.func(song.youtubeLink.slice(17,song.youtubeLink.length))}}>Play</div> */}
                                         <div className="nameAndArtist">
-                                            <div className ='songName' onClick={() => console.log(song)}>{song.song}</div>
-                                            <Link className= 'artistOfSong' to={`/Artist/${song.artist_id}`}>{song.artist}</Link>
+                                            <div className ='songName' onClick={() => console.log(song)}>{song.name}</div>
+                                            <Link className= 'artistOfSong' to={`/Artist/${song.artistId}`}>{song.Artist.name}</Link>
+                                            <Link className= 'artistOfSong' to={`/Album/${song.albumId}`}>{song.Album.name}</Link>
                                         </div>
                                             <div className ='songLength' >{song.length.slice(0,5)}</div>
                                     </div>
                                 })
                                 :<div>
-                                        <div className='lyricTitle'>{songList.filter(song => song.youtube_link === url).map(song=><div style={{margin:'auto', fontWeight:'500', fontSize:'1.2rem', color:'rgb(213, 213, 213)'}}><h1>{song.song}</h1>{song.lyrics}</div>)}</div>
+                                        <div className='lyricTitle'>{songList.filter(song => song.youtubeLink === url).map(song=><div style={{margin:'auto', fontWeight:'500', fontSize:'1.2rem', color:'rgb(213, 213, 213)'}}><h1>{song.name}</h1>{song.lyrics}</div>)}</div>
                                 </div>
                             }
                     </div>

@@ -12,12 +12,12 @@ function Album(){
     useEffect(() => {
         const id = match.params.id;
         try{
-            let getalbum,getAlbums;
-            getalbum = axios.get(`/album/${id}`);
-            getAlbums = axios.get(`/songs?albumId=${id}`);
-            Promise.all([getalbum,getAlbums]).then(values => {
+            let getSongs,getAlbum;
+            getAlbum = axios.get(`/api/albums/${id}`);
+            getSongs = axios.get(`/api/songs/songsFromAlbum/${id}`);
+            Promise.all([getAlbum,getSongs]).then(values => {
                 setAlbumObj({
-                    info: values[0].data[0],
+                    info: values[0].data,
                     songs: values[1].data 
                 });
             }).catch(e => {console.log(e)})
@@ -31,12 +31,12 @@ function Album(){
         !albumObj ? null 
         :<div className="specificArtist">
             <div className='specificHeader'>
-                <img className="specImage" src = {`${albumObj.info['album_img']}`} onError={(e)=>{e.target.style.display='none'}} />
+                <img className="specImage" src = {`${albumObj.info.coverImg}`} onError={(e)=>{e.target.style.display='none'}} />
                 <div className="info">
-                    <div>{albumObj.info.album}</div>
+                    <div>{albumObj.info.name}</div>
                     <div className='smallerDetails'>
-                        <div>Released at : {albumObj.info.album_uploaded.slice(0,10)}</div>
-                        <Link to={`/Artist/${albumObj.info.artist_id}`}><div>By: {albumObj.info.artist}</div></Link>
+                        <div>Released at : {albumObj.info.uploadedAt.slice(0,10)}</div>
+                        <Link to={`/Artist/${albumObj.info.artistId}`}><div>By: {albumObj.info.artistName}</div></Link>
                     </div>
                 </div>
             </div>

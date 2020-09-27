@@ -15,12 +15,12 @@ function Artist(){
         const id = match.params.id;
         try{
             let getArtist,getAlbums,getSongs;
-            getArtist = axios.get(`/artist/${id}`);
-            getAlbums = axios.get(`/albums?artistId=${id}`);
-            getSongs = axios.get(`/songs?artistId=${id}`);
+            getArtist = axios.get(`/api/artists/${id}`);
+            getAlbums = axios.get(`/api/artists/${id}/albums`);
+            getSongs = axios.get(`/api/songs/songsFromArtist/${id}`);
             Promise.all([getArtist,getAlbums,getSongs]).then(values => {
                 setArtistObj({
-                    info: values[0].data[0],
+                    info: values[0].data,
                     albums: values[1].data,
                     songs: values[2].data
                 });
@@ -44,15 +44,15 @@ function Artist(){
         !artistObj ? null 
         :<div className="specificArtist">
             <div className='specificHeader'>
-                <img className="specImage" src = {`${artistObj.info['artist_img']}`} onError={(e)=>{e.target.style.display='none'}} />
+                <img className="specImage" src = {`${artistObj.info.coverImg}`} onError={(e)=>{e.target.style.display='none'}} />
                 <div className="info">
-                    <div>{artistObj.info.artist}</div>
-                    <div className='smallerDetails'>Active since : {artistObj.info.artist_uploaded.slice(0,10)}</div>
+                    <div>{artistObj.info.name}</div>
+                    <div className='smallerDetails'>Active since : {artistObj.info.uploadedAt.slice(0,10)}</div>
                 </div>
             </div>
             <div className='specTitle'>Songs</div>
             <SongContainer songArray={artistObj.songs} />
-            <Carousel musicObj={artistObj} type='artist' title='Albums'/>
+            <Carousel musicObj={artistObj.albums} type='artist' title='Albums'/>
 {/* 
             <div className="specContainer">
                 <div className='specResultContainer'>

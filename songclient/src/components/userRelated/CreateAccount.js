@@ -30,26 +30,26 @@ function CreateAccount(props){
     let doneTypingInterval = 1000;  //time 
 
     useEffect(() => {
-        axios.get('/artists').then(response => {
+        axios.get('/api/artists/topArtists').then(response => {
             setArtistList(response.data);
         }).catch(e => {
             console.log(e);
         })
     },[])
-    async function checkUserExist(value){
-        if(!validateUser(value)){
+    async function checkUserExist(name){
+        if(!validateUser(name)){
             setUserOk(false);
             return;
         }
         setCheckingUser(true);
         try{
-            const {data} = await axios.get(`/userexists/${value}`);
+            const {data} = await axios.post(`/api/users/nameUnique/`,{name});
             if(data === true){
                 setCheckingUser(false);
-                setUserOk(false);
+                setUserOk(true);
             } else if(data === false){
                 setCheckingUser(false);
-                setUserOk(true);
+                setUserOk(false);
             }else{
                 console.log(data);
             }
@@ -81,12 +81,12 @@ function CreateAccount(props){
         if(!email || email.indexOf('@') === -1 || email.indexOf('@') <3){
             return setEmailOk(false);
         }
-      axios.get(`/emailExists?email=${email}`) .then(response => {
+      axios.post(`/api/users/emailUnique`,{email}) .then(response => {
         const data = response.data;
         if(data === true){
-            return setEmailOk(false);
-        }else if(data === false){
             return setEmailOk(true);
+        }else if(data === false){
+            return setEmailOk(false);
         }else{
             console.log(data);
         }
@@ -96,7 +96,7 @@ function CreateAccount(props){
     function addPreference(value){
         let arr = preference.slice();
         let artistsCopy = artistList.slice();
-        let artistToPick = artistsCopy.find(artist=> artist.artist === value.artist);
+        let artistToPick = artistsCopy.find(artist=> artist.name === value.name);
         if(artistToPick){
             artistToPick.picked = true;
             console.log(artistsCopy);
@@ -110,8 +110,8 @@ function CreateAccount(props){
         if(!passwordOk || !userOk || !emailOk || !identical || preference.length<3){
             return;
         }
-        const artistPref = preference.map(artist => artist.artist_id);
-        const userPref = {artistPref};
+        const artists = preference.map(artist => artist.id);
+        const userPref = {artists};
         console.log(userPref);
         const user={
             name:inputVal,
@@ -119,7 +119,7 @@ function CreateAccount(props){
             password: password,
             preferences: JSON.stringify(userPref),
         }
-        axios.post(`/users`,user).then(result => {
+        axios.post(`api/users`,user).then(result => {
             console.log(result.data);
             if(result.data === true){
                 history.push('/login');
@@ -128,9 +128,9 @@ function CreateAccount(props){
     }
 
     function removePreference(value){
-        let arr = preference.filter(artist => artist.artist_id !== value.artist_id);
+        let arr = preference.filter(artist => artist.id !== value.id);
         let artistsCopy = artistList.slice();
-        let artistToRemove = artistsCopy.find(artist=> artist.artist === value.artist);
+        let artistToRemove = artistsCopy.find(artist=> artist.name === value.name);
         if(artistToRemove){
             artistToRemove.picked = false;
             console.log(artistsCopy);

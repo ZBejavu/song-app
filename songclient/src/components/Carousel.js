@@ -20,7 +20,7 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
         }
     }
     console.log(carousel);
-    const myList = type==='artist' ? musicObj.albums : musicObj;
+    const myList = musicObj;
     return (
         <div className="specContainer">
             {musicObj &&(
@@ -32,8 +32,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         (type==='artist' || type==='topAlbums')&&(
                         myList.slice(carousel.from,carousel.to).map(album => {
                             return <div className ='speclistContainer'>
-                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={album.album_img} alt={`${album.album}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Album/${album.album_id}`}><div className ='specificName' onClick={() => console.log(album)}>{album["album"]}</div></Link>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={album.coverImg} alt={`${album.name}Cover`} className ='specificImage' /></div>
+                            <Link to={`/Album/${album.id}`}><div className ='specificName' onClick={() => console.log(album)}>{album.name}</div></Link>
                             {/* <Link to={`/Album/${album.album_id}`}><div className ='specificName' onClick={() => console.log(album)}>{album["album"]}</div></Link> */}
                             </div>
                         }))
@@ -43,8 +43,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         (type==='topArtists')&&(
                         myList.slice(carousel.from,carousel.to).map(artist => {
                             return <div className ='speclistContainer'>
-                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.artist_img} alt={`${artist.artist}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Artist/${artist.artist_id}`}><div className ='specificName' onClick={() => console.log(artist)}>{artist["artist"]}</div></Link>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.coverImg} alt={`${artist.name}Cover`} className ='specificImage' /></div>
+                            <Link to={`/Artist/${artist.id}`}><div className ='specificName' onClick={() => console.log(artist)}>{artist.name}</div></Link>
                             </div>
                         }))
                     }
@@ -52,8 +52,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         (type ==='createAcc')&&(
                         myList.slice(carousel.from,carousel.to).map(artist => {
                             return <div onClick={()=>(preference.length<3 && !artist.picked)? addPreference(artist):artist.picked?removePreference(artist):null} style={{cursor:'pointer'}} className ='speclistContainer'>
-                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.picked?picked :artist.artist_img} alt={`${artist.artist}Cover`} className ='specificImage' /></div>
-                            <div className ='nameForCreate' onClick={() => console.log(artist)}>{artist["artist"]}</div>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.picked?picked :artist.coverImg} alt={`${artist.name}Cover`} className ='specificImage' /></div>
+                            <div className ='nameForCreate' onClick={() => console.log(artist)}>{artist.name}</div>
                             </div>
                         }))
                     }
@@ -62,8 +62,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         (type==='topSongs')&&(
                         myList.slice(carousel.from,carousel.to).map(song => {
                             return <div className ='speclistContainer'>
-                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={song.artist_img} alt={`${song.song}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Song/${song.song_id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song["song"]}</div></Link>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={song.Artist.coverImg} alt={`${song.name}Cover`} className ='specificImage' /></div>
+                            <Link to={`/Song/${song.id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song.name}</div></Link>
                             {/* <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.song_id}); player.setPlay(true)}}>{song["song"]}</div> */}
                             </div>
                         }))
@@ -73,8 +73,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         (type==='topPlaylists')&&(
                         myList.slice(carousel.from,carousel.to).map(playlist => {
                             return <div className ='speclistContainer'>
-                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=playlistImage} src={playlist.cover_img} alt={`${playlist.name}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Playlist/${playlist.playlist_id}`}><div className ='specificName' onClick={() => console.log(playlist)}>{playlist["name"]}</div></Link>
+                            <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=playlistImage} src={playlist.coverImg} alt={`${playlist.name}Cover`} className ='specificImage' /></div>
+                            <Link to={`/Playlist/${playlist.id}`}><div className ='specificName' onClick={() => console.log(playlist)}>{playlist.name}</div></Link>
                             </div>
                         }))
                     }
