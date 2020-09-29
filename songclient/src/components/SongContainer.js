@@ -21,7 +21,7 @@ function Album(props){
                 <div className="songContainer2">    
                         {
                             songArray.map((song,index) => {
-                                return <div className ='listContainer2'>
+                                return <div className ='listContainer2' style={{marginTop:'1%'}}>
                                     <div className='index'>{index+1}.</div>
                                             <div className="nameAndArtist">
                                                 {
@@ -34,6 +34,8 @@ function Album(props){
                                                     :location.pathname.indexOf('Artist') !== -1 
                                                     ?<Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link>
                                                     //<div className ='songName' onClick={()=>{player.setDefinitions({from:'Artist', songId:song.id, id:song.artistId}); player.setPlay(true)}}  >{song.name}</div>
+                                                    :location.pathname.indexOf('AllSongs') !== -1 
+                                                    ?<><img style={{ height:'100%', marginRight: '10%'}} src={song.Artist.coverImg} /><Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link></>
                                                     :null
                                                 }
                                                 {

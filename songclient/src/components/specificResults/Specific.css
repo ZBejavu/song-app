@@ -86,7 +86,7 @@
     width:90%; 
   }
   .specificName:hover{
-    color:rgb(124, 124, 124);
+    color:#CF1717;
     transform: scale(1.01);
     cursor: pointer;
   }

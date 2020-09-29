@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import logo from '../albumCover/logoImage.png';
 import MusicModal from './musicModal';
-import {Link} from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
 function Navbar2(props){
 
     return (
@@ -11,17 +11,19 @@ function Navbar2(props){
             <div className="sidenav2Container">
               {props.authorized?
               <>
-                <Link to="/">Home</Link>
+                <NavLink to="/" exact activeStyle={{color:'#CF1717'}}>Home</NavLink>
+                <NavLink to="/AllArtists" activeStyle={{color:'#CF1717'}}>Artists</NavLink>
+                <NavLink to="/AllAlbums" activeStyle={{color:'#CF1717'}}>Albums</NavLink>
+                <NavLink to="/AllSongs" activeStyle={{color:'#CF1717'}}>Songs</NavLink>
                 {/* <a href="#">Search</a>
                 <a href="#">Songs</a>
-                <a href="#">Artists</a>
                 <a href="#">Playlists</a> */}
                 <a onClick={() => {{localStorage.clear(); props.setAuthorized(false)}}} href="#">Log Out</a>
               </>
               :
               <>
-                <Link to="/CreateAccount">Create Account</Link>
-                <Link to="/Login">Login</Link>
+                <Link to="/CreateAccount" activeStyle={{color:'#CF1717'}}>Create Account</Link>
+                <Link to="/Login" activeStyle={{color:'#CF1717'}}>Login</Link>
               </>
               }
             </div>

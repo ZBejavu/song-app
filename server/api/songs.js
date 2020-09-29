@@ -15,7 +15,10 @@ router.get('/', async (req, res) => {
   //const allArtists = await Artist.findAll({});
   //const allSongs = await Song.findAll({});
   //const allAlbums = await Album.findAll();
-  const allSongs = await Song.findAll({});
+  const allSongs = await Song.findAll({
+    include:[{model:Album, attributes:['name','coverImg']},
+    {model: Artist, attributes:['name','coverImg']}]
+});
   return res.json(allSongs);
 });
 

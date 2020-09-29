@@ -18,6 +18,7 @@ function Navbar2(props){
   },[props.progress])
   useEffect(() =>{
     if(!pressed && props.progress){
+      console.log(props.progress)
       setPlayedSeconds(Math.round(props.progress.playedSeconds));
     }else if(pressed){
       setPlayedSeconds(Math.round(progress * duration/100))
@@ -40,7 +41,12 @@ function Navbar2(props){
             </div>
             <div className="ControlContainer">
                 <ShuffleIcon fontSize='large' color='primary' onClick={(e) => props.shuffle((shuffle)=> !shuffle)} />
-                <SkipPreviousIcon fontSize='large' color='primary' onClick={() => props.prevUrl()} />
+                <SkipPreviousIcon fontSize='large' color='primary' onClick={() =>{
+                   if(playedSeconds>3){
+                     props.videoElem.current.seekTo(0);
+                    }else{ 
+                    props.prevUrl();}
+                   }} />
                 {props.isPlaying ? <PauseIcon fontSize='large' color='primary' onClick={() => props.setPlaying((playing) => !playing)} /> 
                 :<PlayCircleFilledIcon fontSize='large' color='primary' onClick={() => props.setPlaying((playing) => !playing)} />}
                 <SkipNextIcon fontSize='large' color='primary' onClick={() => props.nextUrl()} />

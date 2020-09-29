@@ -45,7 +45,7 @@
     height:fit-content;
     width:90%;
     font-weight: 500;
-    height: 6vh;
+    height: 7vh;
     margin-bottom: 5px;
     /* background-color: rgb(87, 85, 182); */
     background-color: transparent;
@@ -64,6 +64,9 @@
     font-size: 16px;
     width:45%;
     cursor: default;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
     color: rgb(233, 230, 230);
   }
   .songName:hover{
