@@ -1,5 +1,4 @@
 import React,{useState,useEffect,useContext} from 'react';
-import axios from 'axios';
 import {Link, useLocation} from 'react-router-dom';
 import './specificResults/Specific.css';
 import PlayerContext from './PlayerContext'

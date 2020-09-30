@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import './landing.css';
 import {Link, useHistory} from 'react-router-dom';
 import { green } from '@material-ui/core/colors';
@@ -30,7 +31,7 @@ function CreateAccount(props){
     let doneTypingInterval = 1000;  //time 
 
     useEffect(() => {
-        axios.get('/api/artists/topArtists').then(response => {
+        network.get('/api/entry/topArtists').then(response => {
             setArtistList(response.data);
         }).catch(e => {
             console.log(e);
@@ -43,7 +44,7 @@ function CreateAccount(props){
         }
         setCheckingUser(true);
         try{
-            const {data} = await axios.post(`/api/users/nameUnique/`,{name});
+            const {data} = await network.post(`/api/entry/nameUnique/`,{name});
             if(data === true){
                 setCheckingUser(false);
                 setUserOk(true);
@@ -81,7 +82,7 @@ function CreateAccount(props){
         if(!email || email.indexOf('@') === -1 || email.indexOf('@') <3){
             return setEmailOk(false);
         }
-      axios.post(`/api/users/emailUnique`,{email}) .then(response => {
+      network.post(`/api/entry/emailUnique`,{email}) .then(response => {
         const data = response.data;
         if(data === true){
             return setEmailOk(true);
@@ -119,7 +120,7 @@ function CreateAccount(props){
             password: password,
             preferences: JSON.stringify(userPref),
         }
-        axios.post(`api/users`,user).then(result => {
+        network.post(`api/entry/create`,user).then(result => {
             console.log(result.data);
             if(result.data === true){
                 history.push('/login');

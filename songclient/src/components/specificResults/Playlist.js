@@ -1,20 +1,24 @@
 import React,{useState,useEffect,useContext} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import {Link ,useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import './Specific.css';
 import playlistImage from '../../albumCover/playlistImage.png';
 import PlayerContext from '../PlayerContext'
 import SongContainer from '../SongContainer';
-function Album(props){
+function Playlist(props){
     const[playlistObj , setPlaylistObj] = useState();
     const match = useRouteMatch();
     const player = useContext(PlayerContext);
     useEffect(() => {
         const id = match.params.id;
         try{
-            let getPlaylist = axios.get(`/api/playlists/${id}`);
-            let getSongsInPlaylist = axios.get(`/api/playlists/${id}/songs`);
+            let getPlaylist = network.get(`/api/playlists/${id}`);
+            let getSongsInPlaylist = network.get(`/api/playlists/${id}/songs`);
             Promise.all([getPlaylist, getSongsInPlaylist]).then(values => {
+                if(values.some(response => response.status === 401)){
+                    return props.setAuthorized(false);
+                }
                 let playlistToSet ={
                     info: values[0].data,
                     songList: values[1].data
@@ -47,4 +51,4 @@ function Album(props){
       );
 }
 
-export default Album;
+export default Playlist;

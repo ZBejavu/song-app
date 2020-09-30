@@ -15,11 +15,12 @@ import Songs from './components/general/Songs';
 import { BrowserRouter as Router, Switch, Route, Redirect , useHistory } from 'react-router-dom';
 import CreateAccount from './components/userRelated/CreateAccount';
 import Login from './components/userRelated/Login';
+import network from './services/network';
 
 
 function App() {
   const [link, setLink] = useState();
-  const [authorized , setAuthorized] = useState(true);
+  const [authorized , setAuthorized] = useState(false);
   const [play , setPlay] = useState(false);
   const [definitions, setDefinitions] = useState({from:'topSongs', songId:'4' , id:'4'});
   const value=0;
@@ -27,6 +28,7 @@ function App() {
   let doneTypingInterval = 1000;  //time in ms, 5 second for example
 
   const checkAuthorized = async () => {
+
     const token = localStorage.getItem('token');
     const name = localStorage.getItem('name');
     if(!name || !token){
@@ -35,11 +37,12 @@ function App() {
     const body = {token, name};
     console.log(body);
     try{
-      axios.post('/api/users/validUser',{
+      network.post('/api/users/validUser',{
         token: token,
         name: name
       }).then(response => {
-        if(response.status == '400'){
+        console.log(response.status);
+        if(response.status === 401){
           return setAuthorized(false);        
         }else if(response.data === false){
           return setAuthorized(false);
@@ -53,50 +56,63 @@ function App() {
   }
   useEffect(()=>{
     checkAuthorized();
-  })
+  },[])
+
+  useEffect(()=>{
+    if(authorized){
+      //window.location= '/';
+    }
+  },[authorized])
 
   return (
     <Router>
+      
       <div className="App">
         
         <NavBar2 setAuthorized={setAuthorized} authorized={authorized} link ={link} />
         <div className="main2">
         <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
           <Switch>
+            { authorized&& 
+            <>
               <Route path="/" exact >
-              {!authorized ? <Redirect to="/Login" />:<HomePage />}
+              {!authorized ? <Redirect to="/Login" />:<HomePage setAuthorized={setAuthorized}/>}
               </Route>
               <Route path="/Artist/:id">
-                {!authorized ? <Redirect to="/Login" />:<SpecificArtist />}
+                {!authorized ? <Redirect to="/Login" />:<SpecificArtist setAuthorized={setAuthorized} />}
               </Route>
               <Route path="/Album/:id" >
-                {!authorized ? <Redirect to="/Login" />:<SpecificAlbum />}
+                {!authorized ? <Redirect to="/Login" />:<SpecificAlbum setAuthorized={setAuthorized}/>}
               </Route>
               <Route path="/Song/:id" >
-                {!authorized ? <Redirect to="/Login" />:<SongList />}
+                {!authorized ? <Redirect to="/Login" />:<SongList setAuthorized={setAuthorized} />}
               </Route>
               <Route path="/Playlist/:id" >
-                {!authorized ? <Redirect to="/Login" />:<SpecificPlaylist />}
+                {!authorized ? <Redirect to="/Login" />:<SpecificPlaylist setAuthorized={setAuthorized} />}
               </Route>
               <Route path="/AllArtists" >
-                {!authorized ? <Redirect to="/Login" />:<Artists />}
+                {!authorized ? <Redirect to="/Login" />:<Artists setAuthorized={setAuthorized} />}
               </Route>
               <Route path="/AllAlbums" >
-                {!authorized ? <Redirect to="/Login" />:<Albums />}
+                {!authorized ? <Redirect to="/Login" />:<Albums setAuthorized={setAuthorized} />}
               </Route>
               <Route path="/AllSongs" >
-                {!authorized ? <Redirect to="/Login" />:<Songs />}
+                {!authorized ? <Redirect to="/Login" />:<Songs setAuthorized={setAuthorized} />}
               </Route>
+              </>
+              }
               <Route path="/CreateAccount" >
                 <CreateAccount />
               </Route>
               <Route path="/Login">
-                <Login setAuthorized={setAuthorized} />
+                <Login setAuthorized={setAuthorized} authorize={authorized} />
               </Route>
               <Route path="/">
+                <>
                 <div className='lostPage'>
                   ERROR 404, Page Not Found!
                 </div>
+                </>
               </Route> 
           </Switch>
           </PlayerProvider>

@@ -1,7 +1,4 @@
 import React,{useState,useEffect} from 'react';
-import axios from 'axios';
-import logo from '../albumCover/logoImage.png';
-import {Link} from 'react-router-dom';
 function MusicModal(props){
     const videoLink = props.url;
     const [playPause, setPlayPause] = useState(true);

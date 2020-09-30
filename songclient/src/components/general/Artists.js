@@ -1,14 +1,18 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import errorImage from '../../albumCover/errorImage.png';
 import {Link} from 'react-router-dom';
 function Artists(props){
     const [myList, setMyList] = useState([[]]);
     useEffect(() => {
         try{
-            axios.get('/api/artists').then(response => {
+            network.get('/api/artists').then(response => {
                 const data = response.data;
-                console.log(data);
+                console.log(response.status);
+                if(response.status === 401){
+                    return props.setAuthorized(false);
+                }
                 const devidedArr = [], sortedData = data.sort((a, b) => {
                     const name1= a.name.toUpperCase(),
                     name2= b.name.toUpperCase();
@@ -32,7 +36,7 @@ function Artists(props){
     return (
         <>
         {
-
+            !myList[0][0]?null :
             myList.map(row => {
                 return (<div style={{marginLeft:'5%', width:'95%'}} className="specResults">
                 {

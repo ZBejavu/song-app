@@ -29,7 +29,7 @@ function Navbar2(props){
     return (
           <div style={props.toshow?{marginTop:'13vh'}:{}} className="controlFooter">
             <div className='sliderContainer'>
-              <input 
+              <input className='sliderItself'
               onMouseDown={()=>setPressed(true)} 
               onMouseUp={()=>{
                 setPressed(false);

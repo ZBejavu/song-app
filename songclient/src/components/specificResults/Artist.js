@@ -1,5 +1,6 @@
 import React,{useState,useEffect,useContext} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import '../Top.css';
 import './Specific.css';
 import Carousel from '../Carousel';
@@ -7,7 +8,7 @@ import SongContainer from '../SongContainer';
 import errorImage from '../../albumCover/errorImage.png';
 import PlayerContext from '../PlayerContext'
 import {Link,useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-function Artist(){
+function Artist(props){
     const[artistObj , setArtistObj] = useState();
     const[carousel,setCarousel] = useState({from:0,to:5});
     const match = useRouteMatch();
@@ -15,10 +16,13 @@ function Artist(){
         const id = match.params.id;
         try{
             let getArtist,getAlbums,getSongs;
-            getArtist = axios.get(`/api/artists/${id}`);
-            getAlbums = axios.get(`/api/artists/${id}/albums`);
-            getSongs = axios.get(`/api/songs/songsFromArtist/${id}`);
+            getArtist = network.get(`/api/artists/${id}`);
+            getAlbums = network.get(`/api/artists/${id}/albums`);
+            getSongs = network.get(`/api/songs/songsFromArtist/${id}`);
             Promise.all([getArtist,getAlbums,getSongs]).then(values => {
+                if(values.some(response => response.status === 401)){
+                    return props.setAuthorized(false);
+                }
                 setArtistObj({
                     info: values[0].data,
                     albums: values[1].data,

@@ -1,5 +1,6 @@
 import React,{useState,useEffect,useRef} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import MusicModal from '../musicModal';
 import VideoPlayer from '../react-player/VideoPlayer';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -50,7 +51,10 @@ function SongList(props){
         else if(playlist){
             address = `/api/playlists/${playlist}/songs`;
         }
-        axios.get(address).then((response) => {
+        network.get(address).then((response) => {
+            if(response.status === 401){
+                return props.setAuthorized(false);
+            }
         let playingSong;
         if(playlist){ //playingFrom === 'Playlist'
             playingSong = response.data.find(song => song.id == match.params.id); //props.songId );

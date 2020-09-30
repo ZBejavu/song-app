@@ -1,8 +1,9 @@
 import React,{useState,useEffect , useContext} from 'react';
 import axios from 'axios';
+import network from '../services/network';
 import './Top.css';
 import Carousel from './Carousel';
-function HomePage(){
+function HomePage(props){
     const [topObject, setTopObject] = useState();
     useEffect( () => {
         let settingObj = {
@@ -14,11 +15,14 @@ function HomePage(){
         
         try{
             let promise1,promise2,promise3,promise4;
-            promise1 =axios.get('/api/artists/topArtists')
-            promise2 =axios.get('/api/albums/topAlbums')
-            promise3 =axios.get('/api/songs/topSongs')
-            promise4 =axios.get('/api/playlists/topPlaylists')
+            promise1 =network.get('/api/artists/topArtists')
+            promise2 =network.get('/api/albums/topAlbums')
+            promise3 =network.get('/api/songs/topSongs')
+            promise4 =network.get('/api/playlists/topPlaylists')
             Promise.all([promise1,promise2,promise3,promise4]).then((values) =>{
+                if(values.some(response => response.status === 401)){
+                    return props.setAuthorized(false);
+                }
                 settingObj.topArtists = values[0].data;
                 settingObj.topAlbums = values[1].data;
                 settingObj.topSongs = values[2].data;

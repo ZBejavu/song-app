@@ -1,10 +1,11 @@
 import React,{useState,useEffect,useContext} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import {Link,useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import PlayerContext from '../PlayerContext'
 import './Specific.css';
 import SongContainer from '../SongContainer';
-function Album(){
+function Album(props){
     const[albumObj , setAlbumObj] = useState();
     const[link, setLink] = useState();
     const match = useRouteMatch();
@@ -13,9 +14,12 @@ function Album(){
         const id = match.params.id;
         try{
             let getSongs,getAlbum;
-            getAlbum = axios.get(`/api/albums/${id}`);
-            getSongs = axios.get(`/api/songs/songsFromAlbum/${id}`);
+            getAlbum = network.get(`/api/albums/${id}`);
+            getSongs = network.get(`/api/songs/songsFromAlbum/${id}`);
             Promise.all([getAlbum,getSongs]).then(values => {
+                if(values.some(response => response.status === 401)){
+                    return props.setAuthorized(false);
+                }
                 setAlbumObj({
                     info: values[0].data,
                     songs: values[1].data 

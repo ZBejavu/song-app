@@ -22,8 +22,8 @@ function Navbar2(props){
               </>
               :
               <>
-                <Link to="/CreateAccount" activeStyle={{color:'#CF1717'}}>Create Account</Link>
-                <Link to="/Login" activeStyle={{color:'#CF1717'}}>Login</Link>
+                <NavLink to="/CreateAccount" activeStyle={{color:'#CF1717'}}>Create Account</NavLink>
+                <NavLink to="/Login" activeStyle={{color:'#CF1717'}}>Login</NavLink>
               </>
               }
             </div>

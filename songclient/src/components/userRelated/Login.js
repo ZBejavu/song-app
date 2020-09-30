@@ -4,13 +4,13 @@
         import CloseIcon from '@material-ui/icons/Close';
         import CircularProgress from '@material-ui/core/CircularProgress';
         import WarningIcon from '@material-ui/icons/Warning';
-        import {browserHistory} from 'react-router';
         import {Link, useHistory} from 'react-router-dom';
         import axios from 'axios';
+        import network from '../../services/network';
 
 
 
-        function Login({setAuthorized}){
+        function Login({setAuthorized, authorized}){
         const [username, setUsername] = useState();
         const [password, setPassword] = useState();
         const [userOk, setUserOk] = useState(false);
@@ -18,15 +18,17 @@
         const [checkingUser, setCheckingUser]= useState(false);
         const history = useHistory();
         useEffect(()=> {
-            history.replace('/Login');
-        },[])
+            if(authorized){
+                history.push('/')
+            }
+        },[authorized])
         function login(){
             setCheckingUser(true);
             if(!password || !username){
                 setCheckingUser(false);
                 return;
             }
-            axios.post('/api/users/login',{password:password,name:username}).then(response => {
+            network.post('/api/entry/login',{password:password,name:username}).then(response => {
                 console.log(response.data);
                 if(response.data.connection){
                     setCheckingUser(false);

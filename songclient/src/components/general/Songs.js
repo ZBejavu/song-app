@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
+import network from '../../services/network';
 import SongContainer from '../SongContainer';
 import errorImage from '../../albumCover/errorImage.png';
 import {Link} from 'react-router-dom';
@@ -7,9 +8,12 @@ function Albums(props){
     const [myList, setMyList] = useState([]);
     useEffect(() => {
         try{
-            axios.get('/api/songs').then(response => {
+            network.get('/api/songs').then(response => {
                 const data = response.data;
                 console.log(data);
+                if(response.status === 401){
+                    return props.setAuthorized(false);
+                }
                 const sortedData = data.sort((a, b) => {
                     const name1= a.name.toUpperCase(),
                     name2= b.name.toUpperCase();
