@@ -16,9 +16,6 @@ function Playlist(props){
             let getPlaylist = network.get(`/api/playlists/${id}`);
             let getSongsInPlaylist = network.get(`/api/playlists/${id}/songs`);
             Promise.all([getPlaylist, getSongsInPlaylist]).then(values => {
-                if(values.some(response => response.status === 401)){
-                    return props.setAuthorized(false);
-                }
                 let playlistToSet ={
                     info: values[0].data,
                     songList: values[1].data

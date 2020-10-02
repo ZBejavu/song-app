@@ -22,7 +22,8 @@ network.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
-    //   window.location = '/login';
+      localStorage.clear();
+      window.location.replace('/login');
     }
     return error.response;
   }

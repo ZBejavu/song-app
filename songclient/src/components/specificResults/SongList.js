@@ -52,9 +52,6 @@ function SongList(props){
             address = `/api/playlists/${playlist}/songs`;
         }
         network.get(address).then((response) => {
-            if(response.status === 401){
-                return props.setAuthorized(false);
-            }
         let playingSong;
         if(playlist){ //playingFrom === 'Playlist'
             playingSong = response.data.find(song => song.id == match.params.id); //props.songId );

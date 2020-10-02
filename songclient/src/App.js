@@ -22,6 +22,7 @@ function App() {
   const [link, setLink] = useState();
   const [authorized , setAuthorized] = useState(false);
   const [play , setPlay] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [definitions, setDefinitions] = useState({from:'topSongs', songId:'4' , id:'4'});
   const value=0;
   let typingTimer;                //timer identifier
@@ -32,7 +33,8 @@ function App() {
     const token = localStorage.getItem('token');
     const name = localStorage.getItem('name');
     if(!name || !token){
-      return setAuthorized(false);
+      setAuthorized(false);
+      return setLoading(false);
     }
     const body = {token, name};
     console.log(body);
@@ -43,13 +45,17 @@ function App() {
       }).then(response => {
         console.log(response.status);
         if(response.status === 401){
-          return setAuthorized(false);        
+          setAuthorized(false);        
+          return setLoading(false);
         }else if(response.data === false){
-          return setAuthorized(false);
+          setAuthorized(false);
+          return setLoading(false);
         }
         setAuthorized(true);
-      }).catch(e => {console.error(e); setAuthorized(false);})
+        setLoading(false);
+      }).catch(e => {console.error(e); setAuthorized(false); setLoading(false);})
     }catch(e){
+      setLoading(false);
       setAuthorized(false)
       console.log(e);
     }  
@@ -60,21 +66,18 @@ function App() {
 
   useEffect(()=>{
     if(authorized){
-      //window.location= '/';
+
     }
   },[authorized])
 
   return (
+    loading?<div></div> :
     <Router>
-      
       <div className="App">
-        
         <NavBar2 setAuthorized={setAuthorized} authorized={authorized} link ={link} />
         <div className="main2">
         <PlayerProvider value={{setPlay:setPlay,setDefinitions:setDefinitions}}>
           <Switch>
-            { authorized&& 
-            <>
               <Route path="/" exact >
               {!authorized ? <Redirect to="/Login" />:<HomePage setAuthorized={setAuthorized}/>}
               </Route>
@@ -99,8 +102,6 @@ function App() {
               <Route path="/AllSongs" >
                 {!authorized ? <Redirect to="/Login" />:<Songs setAuthorized={setAuthorized} />}
               </Route>
-              </>
-              }
               <Route path="/CreateAccount" >
                 <CreateAccount />
               </Route>

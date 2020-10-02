@@ -22,6 +22,9 @@
                 history.push('/')
             }
         },[authorized])
+        useEffect(()=> {
+            history.replace();
+        },[])
         function login(){
             setCheckingUser(true);
             if(!password || !username){
@@ -32,11 +35,16 @@
                 console.log(response.data);
                 if(response.data.connection){
                     setCheckingUser(false);
+                    setUserOk(true);
                     setDoneChecking(true);
                     localStorage.setItem('token',response.data.token);
                     localStorage.setItem('name', response.data.name);
                     setAuthorized(true);
                     history.push('/');
+                }else{
+                    setUserOk(false);
+                    setCheckingUser(false);
+                    return setDoneChecking(true);
                 }
             }).catch(e=>{
                 console.log(e);
@@ -57,7 +65,8 @@
                             <CircularProgress color='primary' size={20}/>
                             :username&&userOk?
                             <div className='doneIcon'><DoneIcon color='inherit' /></div>
-                            :username&&!userOk?null
+                            :username&&!doneChecking?null
+                            :username&& doneChecking?<div className='errorIcon'><CloseIcon color='inherit' /></div>
                             :<div className='errorIcon2'><WarningIcon color='inherit' /></div>
                         }
                     </div>

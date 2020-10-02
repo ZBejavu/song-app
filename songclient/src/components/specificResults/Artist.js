@@ -20,9 +20,6 @@ function Artist(props){
             getAlbums = network.get(`/api/artists/${id}/albums`);
             getSongs = network.get(`/api/songs/songsFromArtist/${id}`);
             Promise.all([getArtist,getAlbums,getSongs]).then(values => {
-                if(values.some(response => response.status === 401)){
-                    return props.setAuthorized(false);
-                }
                 setArtistObj({
                     info: values[0].data,
                     albums: values[1].data,

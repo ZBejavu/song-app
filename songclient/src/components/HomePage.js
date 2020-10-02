@@ -20,9 +20,6 @@ function HomePage(props){
             promise3 =network.get('/api/songs/topSongs')
             promise4 =network.get('/api/playlists/topPlaylists')
             Promise.all([promise1,promise2,promise3,promise4]).then((values) =>{
-                if(values.some(response => response.status === 401)){
-                    return props.setAuthorized(false);
-                }
                 settingObj.topArtists = values[0].data;
                 settingObj.topAlbums = values[1].data;
                 settingObj.topSongs = values[2].data;

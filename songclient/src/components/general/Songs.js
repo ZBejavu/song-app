@@ -4,16 +4,13 @@ import network from '../../services/network';
 import SongContainer from '../SongContainer';
 import errorImage from '../../albumCover/errorImage.png';
 import {Link} from 'react-router-dom';
-function Albums(props){
+function Albums(){
     const [myList, setMyList] = useState([]);
     useEffect(() => {
         try{
             network.get('/api/songs').then(response => {
                 const data = response.data;
                 console.log(data);
-                if(response.status === 401){
-                    return props.setAuthorized(false);
-                }
                 const sortedData = data.sort((a, b) => {
                     const name1= a.name.toUpperCase(),
                     name2= b.name.toUpperCase();
