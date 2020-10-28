@@ -6,6 +6,7 @@ import VideoPlayer from '../react-player/VideoPlayer';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ControlFooter from '../ControlFooter';
+import createEvent from '../../services/mixpanel';
 import {Link, useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 function SongList(props){
     const match = useRouteMatch();
@@ -23,45 +24,49 @@ function SongList(props){
     const[progress, setProgress] = useState('');
     const [duration, setDuration] = useState();
     useEffect(() => {
-        let address;
+         let address;
          let topSongs, artist, album ,playlist;
          let playingFrom = props.from;
-        //  if(playingFrom === 'topSongs'){
-        //      address = '/top_songs';
-        //  }else if(playingFrom === 'Playlist'){
-        //      address = `/playlist/${props.id}`;
-        //  }else if(playingFrom === 'Album'){
-        //     address = `/songs?albumId=${props.id}`;
-        // }else if(playingFrom === 'Artist'){
-        //     address = `/songs?artistId=${props.id}`;
-        // }else{
-        //     return;
+         if(playingFrom === 'topSongs'){
+             address = '/api/songs/topSongs';
+         }else if(playingFrom === 'Playlist'){
+             address = `/api/playlists/${props.id}/songs`;
+         }else if(playingFrom === 'Album'){
+            address = `/api/songs/songsFromAlbum/${props.id}`;
+        }else if(playingFrom === 'Artist'){
+            address = `/api/songs/songsFromArtist/${props.id}`;
+        }else if(playingFrom === 'AllSongs'){
+            address = `/api/songs`;
+        }else{
+            return;
+        }
+        // topSongs = qParams.get('topSongs');
+        // album = qParams.get('albumId');
+        // artist = qParams.get('artistId');
+        // playlist = qParams.get('playlistId');
+        // if(topSongs){
+        //     address = '/api/songs/topSongs';
+        // }else if(album){
+        //     address = `/api/songs/songsFromAlbum/${album}`;
+        // }else if(artist){
+        //     address = `/api/songs/songsFromArtist/${artist}`;
         // }
-        topSongs = qParams.get('topSongs');
-        album = qParams.get('albumId');
-        artist = qParams.get('artistId');
-        playlist = qParams.get('playlistId');
-        if(topSongs){
-            address = '/api/songs/topSongs';
-        }else if(album){
-            address = `/api/songs/songsFromAlbum/${album}`;
-        }else if(artist){
-            address = `/api/songs/songsFromArtist/${artist}`;
-        }
-        else if(playlist){
-            address = `/api/playlists/${playlist}/songs`;
-        }
+        // else if(playlist){
+        //     address = `/api/playlists/${playlist}/songs`;
+        // }
         network.get(address).then((response) => {
         let playingSong;
-        if(playlist){ //playingFrom === 'Playlist'
-            playingSong = response.data.find(song => song.id == match.params.id); //props.songId );
+        console.log(response)
+        if(playingFrom === 'Playlist'){ //playlist
+            playingSong = response.data.find(song => song.id == props.songId ); // match.params.id); //props.songId );
         }else{
-            playingSong = response.data.find(song => song.id == match.params.id); //props.songId );
+            playingSong = response.data.find(song => song.id == props.songId ); // match.params.id); //props.songId );
         }
         console.log(playingSong);
-        playlist?setSongList(response.data) :setSongList(response.data) //playingFrom==='Playlist'
+        playingFrom==='Playlist'?setSongList(response.data) :setSongList(response.data) //playingFrom==='Playlist' // playlist?
         if(playingSong){
             playingSong.playing=true;
+            createEvent("Play Song", {"name": playingSong.name})
             setUrl(playingSong.youtubeLink);
         }
 
@@ -74,7 +79,9 @@ function SongList(props){
         if(index === songList.length-1){
             return;
         }
-        setUrl(songList[shuffle? shuffle : index+1].youtubeLink)
+        const newSong = songList[shuffle? shuffle : index+1];
+        createEvent("Play Song", {"name": newSong.name})
+        setUrl(newSong.youtubeLink)
     }
     function prevUrl(){
         let shuffle = shuffleTrue? Math.floor(Math.random()*songList.length) : null;
@@ -82,7 +89,9 @@ function SongList(props){
         if(index === 0){
             return;
         }
-        setUrl(songList[shuffle? shuffle : index-1].youtubeLink)
+        const newSong = songList[shuffle? shuffle : index-1];
+        createEvent("Play Song", {"name": newSong.name})
+        setUrl(newSong.youtubeLink)
     }
     useEffect(() => {
         if(songList){

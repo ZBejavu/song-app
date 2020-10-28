@@ -8,6 +8,7 @@ import { Icon } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import PlayerContext from './PlayerContext'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import createEvent from '../services/mixpanel';
 function Carousel({musicObj , type , title , addPreference, removePreference, preference }){
 
     const[carousel,setCarousel] = useState({from:0,to:5});
@@ -19,11 +20,11 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
             setCarousel({from:carousel.from-5, to:carousel.to-5})
         }
     }
-    console.log(carousel);
     const myList = musicObj;
+    console.log();
     return (
         <div className="specContainer">
-            {musicObj &&(
+            {typeof myList === 'string'? null :myList && (
             <div className='specResultContainer'>
                 <div className="specTitle">{title?title==='none'?'':title:type}</div>
                 <div style={type==='createAcc'? {marginLeft:'0'}:{}} className="specResults">
@@ -33,7 +34,7 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         myList.slice(carousel.from,carousel.to).map(album => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={album.coverImg} alt={`${album.name}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Album/${album.id}`}><div className ='specificName' onClick={() => console.log(album)}>{album.name}</div></Link>
+                            <Link to={`/Album/${album.id}`}><div className ='specificName' onClick={() => createEvent("Album Click", {"name": album.name})}>{album.name}</div></Link>
                             {/* <Link to={`/Album/${album.album_id}`}><div className ='specificName' onClick={() => console.log(album)}>{album["album"]}</div></Link> */}
                             </div>
                         }))
@@ -44,7 +45,7 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         myList.slice(carousel.from,carousel.to).map(artist => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={artist.coverImg} alt={`${artist.name}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Artist/${artist.id}`}><div className ='specificName' onClick={() => console.log(artist)}>{artist.name}</div></Link>
+                            <Link to={`/Artist/${artist.id}`}><div className ='specificName' onClick={() => createEvent("Artist Click", {"name": artist.name})}>{artist.name}</div></Link>
                             </div>
                         }))
                     }
@@ -63,8 +64,8 @@ function Carousel({musicObj , type , title , addPreference, removePreference, pr
                         myList.slice(carousel.from,carousel.to).map(song => {
                             return <div className ='speclistContainer'>
                             <div className ='specificImageDiv' ><img onError={(e)=> e.target.src=errorImage} src={song.Artist.coverImg} alt={`${song.name}Cover`} className ='specificImage' /></div>
-                            <Link to={`/Song/${song.id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song.name}</div></Link>
-                            {/* <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.song_id}); player.setPlay(true)}}>{song["song"]}</div> */}
+                            <div className ='specificName' onClick={() => {player.setDefinitions({from:type,songId:song.id}); player.setPlay(true); }}>{song.name}</div>
+                            {/* <Link to={`/Song/${song.id}?topSongs=123`}><div className ='specificName' onClick={() => console.log(song)}>{song.name}</div></Link> */}
                             </div>
                         }))
                     }

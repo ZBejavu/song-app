@@ -16,9 +16,11 @@ import { BrowserRouter as Router, Switch, Route, Redirect , useHistory } from 'r
 import CreateAccount from './components/userRelated/CreateAccount';
 import Login from './components/userRelated/Login';
 import network from './services/network';
-
+import ReactGA from 'react-ga';
+import createEvent from './services/mixpanel';
 
 function App() {
+   //, "album clicked", "song started", "artist clicked" );//{"genre": "hip-hop", "duration in seconds": 42});
   const [link, setLink] = useState();
   const [authorized , setAuthorized] = useState(false);
   const [play , setPlay] = useState(false);
@@ -61,6 +63,7 @@ function App() {
     }  
   }
   useEffect(()=>{
+    createEvent("App Launched");
     checkAuthorized();
   },[])
 

@@ -13,6 +13,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SongList from '../specificResults/SongList';
+import createEvent from '../../services/mixpanel';
 function CreateAccount(props){
     const history = useHistory();
     const [inputVal , setInputVal] = useState();
@@ -82,7 +83,7 @@ function CreateAccount(props){
         if(!email || email.indexOf('@') === -1 || email.indexOf('@') <3){
             return setEmailOk(false);
         }
-      network.post(`/api/entry/emailUnique`,{email}) .then(response => {
+      network.post(`/api/entry/emailUnique`,{email}).then(response => {
         const data = response.data;
         if(data === true){
             return setEmailOk(true);
@@ -123,6 +124,7 @@ function CreateAccount(props){
         network.post(`api/entry/create`,user).then(result => {
             console.log(result.data);
             if(result.data === true){
+                createEvent("User Created", {"email": email})
                 history.push('/login');
             }
         }).catch(e=> console.error(e))

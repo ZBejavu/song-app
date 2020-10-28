@@ -25,16 +25,17 @@ function Album(props){
                                             <div className="nameAndArtist">
                                                 {
                                                     location.pathname.indexOf('Playlist') !== -1 
-                                                    ?<Link className ='songName' to={`/Song/${song.id}?playlistId=${song.Playlist[0].playlistId}`}>{song.name}</Link>
-                                                     //<div className ='songName' onClick={()=>{player.setDefinitions({from:'Playlist', songId:song.id, id:song.Playlist.id}); player.setPlay(true)}} >{song.name}</div>
+                                                    ?<div className ='songName' onClick={()=>{player.setDefinitions({from:'Playlist', songId:song.id, id:song.Playlist[0].playlistId}); player.setPlay(true)}} >{song.name}</div>
+                                                    // <Link className ='songName' to={`/Song/${song.id}?playlistId=${song.Playlist[0].playlistId}`}>{song.name}</Link>
                                                     :location.pathname.indexOf('Album') !== -1 
-                                                    ?<Link className ='songName' to={`/Song/${song.id}?albumId=${song.albumId}`}>{song.name}</Link>
-                                                    //<div className ='songName' onClick={()=>{player.setDefinitions({from:'Album', songId:song.id, id:song.albumId}); player.setPlay(true)}}  >{song.name}</div>
+                                                    ?<div className ='songName' onClick={()=>{player.setDefinitions({from:'Album', songId:song.id, id:song.albumId}); player.setPlay(true)}}  >{song.name}</div>
+                                                    // <Link className ='songName' to={`/Song/${song.id}?albumId=${song.albumId}`}>{song.name}</Link>
                                                     :location.pathname.indexOf('Artist') !== -1 
-                                                    ?<Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link>
-                                                    //<div className ='songName' onClick={()=>{player.setDefinitions({from:'Artist', songId:song.id, id:song.artistId}); player.setPlay(true)}}  >{song.name}</div>
+                                                    ?<div className ='songName' onClick={()=>{player.setDefinitions({from:'Artist', songId:song.id, id:song.artistId}); player.setPlay(true)}}  >{song.name}</div>
+                                                    // <Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link>
                                                     :location.pathname.indexOf('AllSongs') !== -1 
-                                                    ?<><img style={{ height:'100%', marginRight: '10%'}} src={song.Artist.coverImg} /><Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link></>
+                                                    ?<><img style={{ height:'100%', marginRight: '10%'}} src={song.Artist.coverImg} /><div className ='songName' onClick={()=>{player.setDefinitions({from:'AllSongs', songId:song.id, id:song.id}); player.setPlay(true)}}  >{song.name}</div></>
+                                                    // ?<><img style={{ height:'100%', marginRight: '10%'}} src={song.Artist.coverImg} /><Link className ='songName' to={`/Song/${song.id}?artistId=${song.artistId}`}>{song.name}</Link></>
                                                     :null
                                                 }
                                                 {

@@ -9,7 +9,7 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.addColumn(
-      'artists', // table name
+      'Artists', // table name
       'deleted_at', // new field name
       {
         type: Sequelize.DATE,
@@ -17,7 +17,7 @@ module.exports = {
       },
     )
     await queryInterface.addColumn(
-      'albums', // table name
+      'Albums', // table name
       'deleted_at', // new field name
       {
         type: Sequelize.DATE,
@@ -25,7 +25,7 @@ module.exports = {
       },
     )
     await queryInterface.addColumn(
-      'songs', // table name
+      'Songs', // table name
       'deleted_at', // new field name
       {
         type: Sequelize.DATE,

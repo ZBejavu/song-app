@@ -7,7 +7,7 @@
         import {Link, useHistory} from 'react-router-dom';
         import axios from 'axios';
         import network from '../../services/network';
-
+        import createEvent from '../../services/mixpanel';
 
 
         function Login({setAuthorized, authorized}){
@@ -40,6 +40,7 @@
                     localStorage.setItem('token',response.data.token);
                     localStorage.setItem('name', response.data.name);
                     setAuthorized(true);
+                    createEvent("User Logged In");
                     history.push('/');
                 }else{
                     setUserOk(false);
