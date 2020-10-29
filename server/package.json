@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "nodemon index.js",
     "test": "node_modules/.bin/jest",
-    "migrate": "npx sequelize db:migrate"
+    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "seed": "node_modules/.bin/sequelize db:seed:all",
+    "dbup": "npm run migrate && npm run seed"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "5.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

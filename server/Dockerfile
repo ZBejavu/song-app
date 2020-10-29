@@ -1,3 +1,4 @@
+# docker build . -t songappserver
 FROM node:latest
 
 RUN mkdir -p /app/src
