@@ -13,29 +13,37 @@ services:
         MYSQL_PASSWORD: password
         MYSQL_DATABASE: database_development
         MYSQL_USER: root
-      networks: 
-        - mern-app
       volumes: 
-        - mysql-data:/var/lib/mysql
+        - ./mysql-data:/var/lib/mysql
+      # networks: 
+      #   - song-network
 
     api-server:
-        depends_on:
-            - mysql
-        image: songappserver
-        ports: 
-            - "5000:5000"
-        networks:
-          - mern-app
+      depends_on:
+        - mysql
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: songappserver
+      ports: 
+          - "5000:5000"
+      volumes:
+        - '/songclient/node_modules'
+        - ./songclient:/songclient
+        - '/server/node_modules'
+        - ./server:/server
+      # networks:
+      #   - song-network
             
-    react-app:
-        depends_on:
-            - api-server
-        image: songappclient
-        ports: 
-            - "3000:3000"
-        stdin_open: true
-        networks: 
-          - mern-app
+    # react-app:
+    #     depends_on:
+    #         - api-server
+    #     image: songappclient
+    #     ports: 
+    #         - "3000:3000"
+    #     stdin_open: true
+    #     networks: 
+    #       - song-network
 
     migrateAndSeed:
         image: songappserver
@@ -44,12 +52,12 @@ services:
           - mysql
         depends_on:
           - mysql
-        networks: 
-          - mern-app
+        # networks: 
+        #   - song-network
 
-networks:
-  mern-app:
-    driver: bridge
+# networks:
+#   song-network:
+#     driver: bridge
 volumes: 
   mysql-data:
     driver: local

@@ -1,18 +1,22 @@
 # docker build . -t songappserver
-FROM node:latest
+FROM node:12
 
-RUN mkdir -p /app/src
+# WORKDIR /songclient
 
-WORKDIR /app/src
+# COPY ../songclient .
 
-COPY package.json .
+# RUN npm install --production
 
-RUN npm install
+# RUN npm run build 
+
+WORKDIR /server
 
 COPY . .
+
+RUN npm install --production
 
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
 EXPOSE 5000
 
-CMD ["node", "index.js"]
+CMD ["node", "."]

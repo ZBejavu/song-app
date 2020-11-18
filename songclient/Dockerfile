@@ -1,15 +1,11 @@
 # docker build . -t songappclient
-FROM node:latest
+FROM node:12
 
-RUN mkdir -p /app/src
-
-WORKDIR /app/src
-
-COPY package.json .
-
-RUN npm install
+WORKDIR /client
 
 COPY . .
+
+RUN npm install
 
 EXPOSE 3000
 

@@ -1,10 +1,7 @@
 import React,{useState,useEffect} from 'react';
-import axios from 'axios';
 import network from '../../services/network';
 import './landing.css';
-import {Link, useHistory} from 'react-router-dom';
-import { green } from '@material-ui/core/colors';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import { useHistory} from 'react-router-dom';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 import {validateUser , validatePassword} from '../validateUser';
@@ -12,7 +9,6 @@ import Carousel from '../Carousel';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import SongList from '../specificResults/SongList';
 import createEvent from '../../services/mixpanel';
 function CreateAccount(props){
     const history = useHistory();
