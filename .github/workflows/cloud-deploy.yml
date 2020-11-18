@@ -1,4 +1,4 @@
-name: Build and Deploy to Cloud Run
+name: Build and Deploy to Google Compute Engine
 
 on:
   push:
@@ -7,23 +7,17 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-  RUN_REGION: us-central1
-  SERVICE_NAME: songapplication
+  GCE_INSTANCE: instance-1  # TODO: update to instance name
+  GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
 
 jobs:
-  setup-build-deploy:
-    name: Setup, Build, and Deploy
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./songclient
-    - name: Build client
-      run: CI=false NODE_ENV=production npm run build
-      working-directory: ./songclient
     # Setup gcloud CLI
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -31,19 +25,28 @@ jobs:
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         project_id: ${{ secrets.RUN_PROJECT }}
 
-    # Build and push image to Google Container Registry
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - run: |-
+        gcloud --quiet auth configure-docker
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./client
+    # Build production build so docker will have an up to date image
+    - name: Build client
+      run: CI=false npm run build
+      working-directory: ./client
+    # Build the Docker image
     - name: Build
       run: |-
-        gcloud builds submit \
-          --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
-    # Deploy image to Cloud Run
+        docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" .
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
     - name: Deploy
       run: |-
-        gcloud run deploy "$SERVICE_NAME" \
-          --quiet \
-          --platform="managed" \
-          --image="gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --region="$RUN_REGION" \
-          --port=5000 \
-          --allow-unauthenticated
+        gcloud compute instances update-container "$GCE_INSTANCE" \
+          --zone "$GCE_INSTANCE_ZONE" \
+          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+          
