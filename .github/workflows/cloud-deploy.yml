@@ -46,12 +46,12 @@ jobs:
         docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
     - name: Create Instance
       run: |-
-        gcloud compute instances create-with-container $GCE_INSTANCE\
+        gcloud compute instances create-with-container "$GCE_INSTANCE" \
         --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
         --image-project "$PROJECT_ID" \
         --zone "$GCE_INSTANCE_ZONE" \
         --machine-type e2-medium
-        
+
     # - name: Deploy
     #   run: |-
     #     gcloud compute instances update-container "$GCE_INSTANCE" \
