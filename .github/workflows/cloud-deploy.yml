@@ -7,7 +7,7 @@ on:
 
 # Environment variables available to all jobs and steps in this workflow
 env:
-    PROJECT_ID: ${{ secrets.PROJECT_ID }}
+    PROJECT_ID: ${{ secrets.RUN_PROJECT}}
     RUN_REGION: us-central1
     SERVICE_NAME: super-simple-service
 
