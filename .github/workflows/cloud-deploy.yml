@@ -31,11 +31,11 @@ jobs:
         gcloud --quiet auth configure-docker
     - name: Install dependencies
       run: npm ci
-      working-directory: ./client
+      working-directory: ./songclient
     # Build production build so docker will have an up to date image
-    - name: Build client
+    - name: Build songclient
       run: CI=false npm run build
-      working-directory: ./client
+      working-directory: ./songclient
     # Build the Docker image
     - name: Build
       run: |-
@@ -49,4 +49,4 @@ jobs:
         gcloud compute instances update-container "$GCE_INSTANCE" \
           --zone "$GCE_INSTANCE_ZONE" \
           --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-          
+
