@@ -42,8 +42,8 @@ jobs:
       run: |-
         gcloud run deploy "$SERVICE_NAME" \
           --quiet \
-          --port 5000
-          --region "$RUN_REGION" \
-          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --platform "managed" \
+          --image="gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --region="$RUN_REGION" \
+          --port=5000
+          --platform="managed" \
           --allow-unauthenticated
