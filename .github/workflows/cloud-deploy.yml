@@ -33,9 +33,11 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     # Deploy image to Cloud Run
+    - name: Login 
+      run: gcloud auth login
     - name: Deploy
       run: |-
-        gcloud auth application-default login && gcloud run deploy "$SERVICE_NAME" \
+        gcloud run deploy "$SERVICE_NAME" \
           --quiet \
           --region "$RUN_REGION" \
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
