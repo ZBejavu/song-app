@@ -30,7 +30,7 @@ jobs:
             # Configure gcloud CLI
             - name: gcloud Set up
               run: |
-                  gcloud config set project $PROJECT_ID
+                  gcloud config set project ${{ secrets.RUN_PROJECT}}
             # Build and push image to Google Container Registry
             - name: Build
               run: |
