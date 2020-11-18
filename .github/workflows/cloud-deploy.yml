@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies
       run: npm ci
-      working-directory: ./client
+      working-directory: ./songclient
     - name: Build client
       run: CI=false npm run build
       working-directory: ./songclient
