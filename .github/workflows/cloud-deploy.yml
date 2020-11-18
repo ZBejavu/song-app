@@ -50,7 +50,15 @@ jobs:
         --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
         --image-project "$PROJECT_ID" \
         --zone "$GCE_INSTANCE_ZONE" \
+        --tags http-server \
         --machine-type e2-medium
+    - name: Add Firewall Rules
+      run: |-
+        gcloud compute firewall-rules create default-allow-http-5000 \
+        --allow tcp:5000 \
+        --source-ranges 0.0.0.0/0 \
+        --target-tags http-server \
+        --description "Allow port 5000 access to http-server"
 
     # - name: Deploy
     #   run: |-
