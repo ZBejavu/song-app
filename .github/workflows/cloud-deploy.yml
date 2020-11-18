@@ -18,6 +18,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./client
     - name: Build client
       run: CI=false npm run build
       working-directory: ./songclient
