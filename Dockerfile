@@ -1,17 +1,17 @@
 # docker build . -t songappserver
 FROM node:12
 
-# WORKDIR /songclient/build
+WORKDIR /songclient/build
 
-# ADD /songclient/build .
+ADD /songclient/build .
 
-WORKDIR /songclient
+# WORKDIR /songclient
 
-COPY /songclient .
+# COPY /songclient .
 
-RUN npm install --production
+# RUN npm install --production
 
-RUN npm run build 
+# RUN npm run build 
 
 WORKDIR /server
 
