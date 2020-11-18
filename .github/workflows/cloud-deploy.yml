@@ -45,5 +45,5 @@ jobs:
           --platform="managed" \
           --image="gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
           --region="$RUN_REGION" \
-          --port=5000
+          --port=5000 \
           --allow-unauthenticated
