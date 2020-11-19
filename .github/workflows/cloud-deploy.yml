@@ -11,6 +11,7 @@ env:
   GCE_INSTANCE: instance-1  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+  PWD: ${{ secrets.PWD }}
   USER: ${{ secrets.USER }}
 
 jobs:
@@ -32,13 +33,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./songclient
+    # - name: Install dependencies
+    #   run: npm ci
+    #   working-directory: ./songclient
     # Build production build so docker will have an up to date image
-    - name: Build songclient
-      run: CI=false npm run build
-      working-directory: ./songclient
+    # - name: Build songclient
+    #   run: CI=false npm run build
+    #   working-directory: ./songclient
     # Build the Docker image
     # - name: Build
     #   run: |-
@@ -47,14 +48,18 @@ jobs:
     # - name: Publish Image
     #   run: |-
     #     docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-      # Build the Docker image
-    - name: Build
-      run: |-
-        make build
-    # Push the Docker image to Google Container Registry
-    - name: Publish
-      run: |-
-        make push
+
+
+    #   # Build the Docker image
+    # - name: Build
+    #   run: |-
+    #     make build
+    # # Push the Docker image to Google Container Registry
+    # - name: Publish
+    #   run: |-
+    #     make push
+
+
     - name: Build-migrate
       run: |-
         make build-migrate
@@ -62,16 +67,26 @@ jobs:
     - name: Publish-migrate
       run: |-
         make push-migrate
-    - name: Deploy
-      run: |-
-        gcloud compute instances update-container "$GCE_INSTANCE" \
-          --zone "$GCE_INSTANCE_ZONE" \
-          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-    - name: Deploy2
-      run: |-
-        gcloud --quiet compute ssh --zone us-central1-a instance-1 --command '
-          sudo docker restart mysql &&
-          sudo docker run -d --name="gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:$GITHUB_SHA"
+    # - name: Initialize sql
+    #   run: make sql-init
+    - name: restart sql
+      run: make restart-sql
+    - name: run migrations
+      run: make migrate
+
+    # - name: Deploy
+    #   run: |-
+    #     gcloud compute instances update-container "$GCE_INSTANCE" \
+    #       --zone "$GCE_INSTANCE_ZONE" \
+    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+
+
+
+    # - name: Deploy2
+    #   run: |-
+    #     gcloud --quiet compute ssh --zone us-central1-a instance-1 --command '
+    #       sudo docker restart mysql &&
+    #       sudo docker run -d --name="gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:$GITHUB_SHA"
 
     # - name: Create Instance with Container
     #   run: |-

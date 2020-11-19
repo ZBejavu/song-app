@@ -5,6 +5,7 @@ MIGRATE_TAG=${GCE_INSTANCE}-migrate-image:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
 REMOTE_MIGRATE_TAG=gcr.io/$(PROJECT_ID)/$(MIGRATE_TAG)
 CONTAINER_NAME=songapp-container
+MIGRATE_NAME=migrate-image
 # DB_NAME=storybooks
 SSH_STRING=${USER}${GCE_INSTANCE}
 ssh:
@@ -41,3 +42,14 @@ deploy:
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
 			-p 5000:5000 \
+
+sql-init:
+	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD=${PWD} -d mysql:latest'
+
+restart-sql:
+	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_MIGRATE_TAG)'
+
+migrate:
+	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_MIGRATE_TAG)'
+	@$(MAKE) ssh-cmd CMD='\
+		docker run -d --name=$(MIGRATE_NAME)
