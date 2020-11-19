@@ -34,7 +34,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
       working-directory: ./songclient
-    Build production build so docker will have an up to date image
+    # Build production build so docker will have an up to date image
     - name: Build songclient
       run: CI=false npm run build
       working-directory: ./songclient
