@@ -71,7 +71,7 @@ jobs:
       run: |-
         gcloud --quiet compute ssh --zone us-central1-a instance-1 --command '
           sudo docker restart mysql &&
-          sudo docker run -d --name="gcr.io/$PROJECT_IDmigrate-image"
+          sudo docker run -d --name="gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:$GITHUB_SHA"
 
     # - name: Create Instance with Container
     #   run: |-

@@ -1,7 +1,9 @@
 PROJECT_ID=${GCP_ID}
 ZONE=${GCE_INSTANCE_ZONE}
 LOCAL_TAG=${GCE_INSTANCE}-image:$(GITHUB_SHA)
+MIGRATE_TAG=${GCE_INSTANCE}-migrate-image:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
+REMOTE_MIGRATE_TAG=gcr.io/$(PROJECT_ID)/$(MIGRATE_TAG)
 CONTAINER_NAME=songapp-container
 # DB_NAME=storybooks
 SSH_STRING=${USER}${GCE_INSTANCE}
@@ -20,8 +22,8 @@ build-migrate:
 	docker build -t migrate-image ./server
 
 push-migrate:
-	docker tag migrate-image gcr.io/$(PROJECT_ID)migrate-image
-	docker push gcr.io/$(PROJECT_ID)migrate-image
+	docker tag ${MIGRATE_TAG} ${REMOTE_MIGRATE_TAG}
+	docker push ${REMOTE_MIGRATE_TAG}
 
 push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
