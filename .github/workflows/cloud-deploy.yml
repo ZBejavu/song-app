@@ -58,7 +58,7 @@ jobs:
     - name: Create Instance with Container
       run: |-
         gcloud compute instances create-with-container "$GCE_INSTANCE" \
-        --image cos-dev-88-15480-0-0 \
+        --container-image cos-dev-88-15480-0-0 \
         --image-project cos-cloud \
         --zone "$GCE_INSTANCE_ZONE" \
         --service-account "$SERVICE_ACCOUNT" \
