@@ -69,10 +69,16 @@ jobs:
         make push-migrate
     # - name: Initialize sql
     #   run: make sql-init
-    - name: restart sql
-      run: make restart-sql
-    - name: run migrations
-      run: make migrate
+    - name: Connect With SSH restart mysql and migrate
+      run: |-
+        gcloud compute ssh \
+        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
+        --command docker restart mysql &&
+        make migrate2
+    # - name: restart sql
+    #   run: make restart-sql
+    # - name: run migrations
+    #   run: make migrate
 
     # - name: Deploy
     #   run: |-

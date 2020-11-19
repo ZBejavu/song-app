@@ -47,8 +47,10 @@ sql-init:
 	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD=${PWD} -d mysql:latest'
 
 restart-sql:
-	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_MIGRATE_TAG)'
+	$(MAKE) ssh-cmd CMD='docker restart mysql'
 
+migrate2:
+	$(MAKE) docker run -d --name=$(MIGRATE_NAME)
 migrate:
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_MIGRATE_TAG)'
 	@$(MAKE) ssh-cmd CMD='\
