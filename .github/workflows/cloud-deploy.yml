@@ -13,6 +13,7 @@ env:
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   PWD: ${{ secrets.PWD }}
   USER: ${{ secrets.USER }}
+  GCE_HOST: ${{ secrets.DB_HOST }}
 
 jobs:
   setup-build-publish-deploy:
@@ -59,7 +60,7 @@ jobs:
     - name: Publish
       run: |-
         make push
-        
+
     # - name: Create Instance with Container
     #   run: |-
     #     gcloud compute instances create-with-container "$GCE_INSTANCE" \
@@ -83,12 +84,15 @@ jobs:
         gcloud compute instances update-container "$GCE_INSTANCE" \
           --zone "$GCE_INSTANCE_ZONE" \
           --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-    - name: Connect With SSH start mysql and migrate
-      run: |-
-        gcloud compute ssh \
-        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
-        docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
-        docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:2a660a6540756e47f886a5d1b6681d97ad316171 --rm
+          --container-env= DB_HOST=$GCE_HOST,DB_PASSWORD=$PWD
+
+    # - name: Connect With SSH start mysql and migrate
+    #   run: |-
+    #     gcloud compute ssh \
+    #     --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
+    #     docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
+    #     docker restart mysql &&
+    #     docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:2a660a6540756e47f886a5d1b6681d97ad316171 --rm
         
     # - name: Initialize sql
     #   run: make sql-init
