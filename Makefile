@@ -14,7 +14,7 @@ ssh:
 		--zone=$(ZONE)
 
 ssh-cmd:
-	@gcloud --quiet compute ssh --zone $(ZONE) ${GCE_INSTANCE} --command "$(CMD)"
+	@gcloud --quiet compute ssh $(SSH_STRING) --command "$(CMD)"
 
 build:
 	docker build -t $(LOCAL_TAG) .
