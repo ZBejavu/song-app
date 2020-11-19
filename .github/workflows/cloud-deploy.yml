@@ -34,13 +34,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    # - name: Install dependencies
-    #   run: npm ci
-    #   working-directory: ./songclient
-    # # Build production build so docker will have an up to date image
-    # - name: Build songclient
-    #   run: CI=false npm run build
-    #   working-directory: ./songclient
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./songclient
+    # Build production build so docker will have an up to date image
+    - name: Build songclient
+      run: CI=false npm run build
+      working-directory: ./songclient
 
     # Build the Docker image
     # - name: Build
