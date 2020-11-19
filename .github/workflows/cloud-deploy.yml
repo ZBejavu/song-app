@@ -34,13 +34,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./songclient
-    # Build production build so docker will have an up to date image
-    - name: Build songclient
-      run: CI=false npm run build
-      working-directory: ./songclient
+    # - name: Install dependencies
+    #   run: npm ci
+    #   working-directory: ./songclient
+    # # Build production build so docker will have an up to date image
+    # - name: Build songclient
+    #   run: CI=false npm run build
+    #   working-directory: ./songclient
 
     # Build the Docker image
     # - name: Build
@@ -72,19 +72,20 @@ jobs:
     #     --tags http-server \
     #     --machine-type e2-medium
 
-    - name: Build-migrate
-      run: |-
-        make build-migrate
-    # Push the Docker image to Google Container Registry
-    - name: Publish-migrate
-      run: |-
-        make push-migrate
+    # - name: Build-migrate
+    #   run: |-
+    #     make build-migrate
+    # # Push the Docker image to Google Container Registry
+    # - name: Publish-migrate
+    #   run: |-
+    #     make push-migrate
+
     - name: Deploy
       run: |-
         gcloud compute instances update-container "$GCE_INSTANCE" \
           --zone "$GCE_INSTANCE_ZONE" \
           --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-          --container-env= DB_HOST=$GCE_HOST,DB_PASSWORD=$PWD
+          --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=$PWD]
 
     # - name: Connect With SSH start mysql and migrate
     #   run: |-
