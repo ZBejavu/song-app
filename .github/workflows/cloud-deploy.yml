@@ -47,7 +47,7 @@ jobs:
         docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
     - name: Create Instance
       run: |-
-        gcloud compute instances create-with-container "$GCE_INSTANCE" \
+        gcloud compute instances create "$GCE_INSTANCE" \
         --image cos-dev-88-15480-0-0 \
         --image-project cos-cloud \
         --zone "$GCE_INSTANCE_ZONE" \
