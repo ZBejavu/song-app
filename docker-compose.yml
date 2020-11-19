@@ -14,7 +14,7 @@ services:
         MYSQL_DATABASE: database_development
         MYSQL_USER: root
       volumes: 
-        - ./mysql-data:/var/lib/mysql
+        - mysql-data:/var/lib/mysql
       # networks: 
       #   - song-network
 
