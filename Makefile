@@ -5,12 +5,12 @@ REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
 CONTAINER_NAME=songapp-container
 # DB_NAME=storybooks
 SSH_STRING=${USER}${GCE_INSTANCE}
-ssh: check-env
+ssh:
 	gcloud compute ssh $(SSH_STRING) \
 		--project=$(PROJECT_ID) \
 		--zone=$(ZONE)
 
-ssh-cmd: check-env
+ssh-cmd:
 	@gcloud compute ssh $(SSH_STRING) \
 		--project=$(PROJECT_ID) \
 		--zone=$(ZONE) \
