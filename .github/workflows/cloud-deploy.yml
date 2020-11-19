@@ -60,7 +60,7 @@ jobs:
         gcloud compute instances create-with-container "$GCE_INSTANCE" \
         --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
         --image-project cos-cloud \
-        --image cos-stable-85-13310-1041-28
+        --image cos-stable-85-13310-1041-28 \
         --zone "$GCE_INSTANCE_ZONE" \
         --service-account "$SERVICE_ACCOUNT" \
         --tags http-server \
