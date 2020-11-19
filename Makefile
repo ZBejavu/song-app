@@ -17,7 +17,7 @@ build:
 	docker build -t $(LOCAL_TAG) .
 
 build-migrate:
-	docker build -t migrate-image .
+	docker build -t migrate-image ./initialize-server
 
 push-migration:
 	docker tag migrate-image gcr.io/$(PROJECT_ID)migrate-image

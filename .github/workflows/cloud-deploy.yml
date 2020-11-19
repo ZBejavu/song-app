@@ -58,7 +58,6 @@ jobs:
     - name: Build-migrate
       run: |-
         make build-migrate
-      working-directory: ./initialize-server
     # Push the Docker image to Google Container Registry
     - name: Publish-migrate
       run: |-
