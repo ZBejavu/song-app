@@ -23,4 +23,4 @@ RUN npm rebuild bcrypt --build-from-source
 
 EXPOSE 5000
 
-CMD ["node", "."]
+CMD ["npm", "run", "spinup"]

@@ -33,13 +33,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    # - name: Install dependencies
-    #   run: npm ci
-    #   working-directory: ./songclient
-    # Build production build so docker will have an up to date image
-    # - name: Build songclient
-    #   run: CI=false npm run build
-    #   working-directory: ./songclient
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./songclient
+    Build production build so docker will have an up to date image
+    - name: Build songclient
+      run: CI=false npm run build
+      working-directory: ./songclient
     # Build the Docker image
     # - name: Build
     #   run: |-
@@ -50,25 +50,27 @@ jobs:
     #     docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
 
-    #   # Build the Docker image
-    # - name: Build
-    #   run: |-
-    #     make build
-    # # Push the Docker image to Google Container Registry
-    # - name: Publish
-    #   run: |-
-    #     make push
+      # Build the Docker image
+    - name: Build
+      run: |-
+        make build
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        make push
 
-
-    # - name: Build-migrate
-    #   run: |-
-    #     make build-migrate
-    # # Push the Docker image to Google Container Registry
-    # - name: Publish-migrate
-    #   run: |-
-    #     make push-migrate
-    # - name: Initialize sql
-    #   run: make sql-init
+    - name: Build-migrate
+      run: |-
+        make build-migrate
+    # Push the Docker image to Google Container Registry
+    - name: Publish-migrate
+      run: |-
+        make push-migrate
+    - name: Deploy
+      run: |-
+        gcloud compute instances update-container "$GCE_INSTANCE" \
+          --zone "$GCE_INSTANCE_ZONE" \
+          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
     - name: Connect With SSH start mysql and migrate
       run: |-
         gcloud compute ssh \
@@ -76,16 +78,12 @@ jobs:
         docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
         docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:2a660a6540756e47f886a5d1b6681d97ad316171 --rm
         
+    # - name: Initialize sql
+    #   run: make sql-init
     # - name: restart sql
     #   run: make restart-sql
     # - name: run migrations
     #   run: make migrate
-
-    # - name: Deploy
-    #   run: |-
-    #     gcloud compute instances update-container "$GCE_INSTANCE" \
-    #       --zone "$GCE_INSTANCE_ZONE" \
-    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
 
 
