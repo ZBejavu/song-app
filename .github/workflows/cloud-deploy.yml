@@ -74,7 +74,7 @@ jobs:
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
         docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
-        docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:latest--rm
+        docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:latest --rm
         
     # - name: restart sql
     #   run: make restart-sql
