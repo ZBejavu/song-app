@@ -9,6 +9,7 @@
     "create": "node_modules/.bin/sequelize db:create",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "seed": "node_modules/.bin/sequelize db:seed:all",
+    "spinup": "npm run create && npm run migrate && node index.js",
     "dbup2": "npm run migrate && npm run seed",
     "dbup": "npm run create && npm run migrate && npm run seed"
   },

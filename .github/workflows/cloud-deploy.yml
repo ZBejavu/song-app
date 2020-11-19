@@ -55,19 +55,21 @@ jobs:
     - name: Publish
       run: |-
         make push
-    - name: Create Instance with Container
-      run: |-
-        gcloud compute instances create-with-container "$GCE_INSTANCE" \
-        --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
-        --image-project cos-cloud \
-        --image cos-stable-85-13310-1041-28 \
-        --zone "$GCE_INSTANCE_ZONE" \
-        --service-account "$SERVICE_ACCOUNT" \
-        --tags http-server \
-        --machine-type e2-medium
-    - name: Deploy
-      run: |-
-        make deploy
+    # - name: Create Instance with Container
+    #   run: |-
+    #     gcloud compute instances create-with-container "$GCE_INSTANCE" \
+    #     --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
+    #     --image-project cos-cloud \
+    #     --image cos-stable-85-13310-1041-28 \
+    #     --zone "$GCE_INSTANCE_ZONE" \
+    #     --service-account "$SERVICE_ACCOUNT" \
+    #     --tags http-server \
+    #     --machine-type e2-medium
+    # - name: Deploy
+    #   run: |-
+    #     make deploy
+
+    
     # - name: Create Instance
     #   run: |-
     #     gcloud compute instances create "$GCE_INSTANCE" \
@@ -87,11 +89,11 @@ jobs:
     #     --source-ranges 0.0.0.0/0 \
     #     --target-tags http-server \
     #     --description "Allow port 5000 access to http-server"
-    # - name: Deploy
-    #   run: |-
-    #     gcloud compute instances update-container "$GCE_INSTANCE" \
-    #       --zone "$GCE_INSTANCE_ZONE" \
-    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+    - name: Deploy
+      run: |-
+        gcloud compute instances update-container "$GCE_INSTANCE" \
+          --zone "$GCE_INSTANCE_ZONE" \
+          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
 
     # - name: Connect With SSH
