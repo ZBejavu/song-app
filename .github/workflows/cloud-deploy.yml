@@ -60,13 +60,13 @@ jobs:
     #     make push
 
 
-    - name: Build-migrate
-      run: |-
-        make build-migrate
-    # Push the Docker image to Google Container Registry
-    - name: Publish-migrate
-      run: |-
-        make push-migrate
+    # - name: Build-migrate
+    #   run: |-
+    #     make build-migrate
+    # # Push the Docker image to Google Container Registry
+    # - name: Publish-migrate
+    #   run: |-
+    #     make push-migrate
     # - name: Initialize sql
     #   run: make sql-init
     - name: Connect With SSH start mysql and migrate
@@ -74,7 +74,8 @@ jobs:
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
         docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
-        make migrate2
+        docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:$GITHUB_SHA --rm
+        
     # - name: restart sql
     #   run: make restart-sql
     # - name: run migrations
