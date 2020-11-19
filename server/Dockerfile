@@ -1,13 +1,27 @@
 # docker build . -t songappserver
-FROM node:12
+# FROM node:12
 
-# WORKDIR /songclient
+# # WORKDIR /songclient
 
-# COPY ../songclient .
+# # COPY ../songclient .
+
+# # RUN npm install --production
+
+# # RUN npm run build 
+
+# WORKDIR /server
+
+# COPY . .
 
 # RUN npm install --production
 
-# RUN npm run build 
+# RUN git clone https://github.com/vishnubob/wait-for-it.git
+
+# EXPOSE 5000
+
+# CMD ["node", "."]
+
+FROM node:12
 
 WORKDIR /server
 
@@ -15,8 +29,4 @@ COPY . .
 
 RUN npm install --production
 
-RUN git clone https://github.com/vishnubob/wait-for-it.git
-
-EXPOSE 5000
-
-CMD ["node", "."]
+CMD ["npm", "run", "initialize"]
