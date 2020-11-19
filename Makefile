@@ -23,7 +23,7 @@ push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
 
-deploy: check-env
+deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
 	@echo "pulling new container image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
