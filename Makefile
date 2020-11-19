@@ -11,10 +11,7 @@ ssh:
 		--zone=$(ZONE)
 
 ssh-cmd:
-	@gcloud compute ssh $(SSH_STRING) \
-		--project=$(PROJECT_ID) \
-		--zone=$(ZONE) \
-		--command="$(CMD)"
+	@gcloud compute ssh --zone $(ZONE) ${GCE_INSTANCE} --command="$(CMD)"
 
 build:
 	docker build -t $(LOCAL_TAG) .
@@ -23,9 +20,9 @@ push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
 
+	# $(MAKE) ssh-cmd CMD='sudo docker-credential-gcr configure-docker'
+	# @echo "pulling new container image..."
 deploy: 
-	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
-	@echo "pulling new container image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
 	@echo "removing old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
