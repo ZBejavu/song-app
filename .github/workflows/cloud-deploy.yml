@@ -55,6 +55,25 @@ jobs:
     - name: Publish
       run: |-
         make push
+    - name: Build-migrate
+      run: |-
+        make build-migrate
+      working-directory: ./Initialize-server
+    # Push the Docker image to Google Container Registry
+    - name: Publish-migrate
+      run: |-
+        make push-migrate
+    - name: Deploy
+      run: |-
+        gcloud compute instances update-container "$GCE_INSTANCE" \
+          --zone "$GCE_INSTANCE_ZONE" \
+          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+    - name: Deploy2
+      run: |-
+        gcloud --quiet compute ssh --zone us-central1-a instance-1 --command '
+          sudo docker restart mysql &&
+          sudo docker run -d --name="gcr.io/$PROJECT_IDmigrate-image"
+
     # - name: Create Instance with Container
     #   run: |-
     #     gcloud compute instances create-with-container "$GCE_INSTANCE" \
@@ -69,7 +88,7 @@ jobs:
     #   run: |-
     #     make deploy
 
-    
+
     # - name: Create Instance
     #   run: |-
     #     gcloud compute instances create "$GCE_INSTANCE" \
@@ -89,11 +108,11 @@ jobs:
     #     --source-ranges 0.0.0.0/0 \
     #     --target-tags http-server \
     #     --description "Allow port 5000 access to http-server"
-    - name: Deploy
-      run: |-
-        gcloud compute instances update-container "$GCE_INSTANCE" \
-          --zone "$GCE_INSTANCE_ZONE" \
-          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+    # - name: Deploy
+    #   run: |-
+    #     gcloud compute instances update-container "$GCE_INSTANCE" \
+    #       --zone "$GCE_INSTANCE_ZONE" \
+    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
 
     # - name: Connect With SSH
