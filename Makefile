@@ -19,7 +19,7 @@ build:
 	docker build -t $(LOCAL_TAG) .
 
 build-migrate:
-	docker build -t migrate-image ./server
+	docker build -t ${MIGRATE_TAG} ./server
 
 push-migrate:
 	docker tag ${MIGRATE_TAG} ${REMOTE_MIGRATE_TAG}
