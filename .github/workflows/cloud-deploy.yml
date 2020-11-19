@@ -85,7 +85,7 @@ jobs:
         gcloud compute instances update-container "$GCE_INSTANCE" \
           --zone "$GCE_INSTANCE_ZONE" \
           --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-          --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=$PWD]
+          --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.PWD}}]
 
     # - name: Connect With SSH start mysql and migrate
     #   run: |-
