@@ -78,7 +78,7 @@ jobs:
         gcloud compute scp \
         --recurse \
         --zone "$GCE_INSTANCE_ZONE" \
-        ./build root@$GCE_INSTANCE:${{ github.event.repository.name }}/client
+        ./build root@$GCE_INSTANCE:${{ github.event.repository.name }}/songclient
       working-directory: ./songclient
     - name: Connect With SSH and pull Origin
       run: |-
