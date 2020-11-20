@@ -34,13 +34,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./songclient
-    # Build production build so docker will have an up to date image
-    - name: Build songclient
-      run: CI=false npm run build
-      working-directory: ./songclient
+    # - name: Install dependencies
+    #   run: npm ci
+    #   working-directory: ./songclient
+    # # Build production build so docker will have an up to date image
+    # - name: Build songclient
+    #   run: CI=false npm run build
+    #   working-directory: ./songclient
 
     # Build the Docker image
     # - name: Build
@@ -51,25 +51,27 @@ jobs:
     #   run: |-
     #     docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
-    - name: Create Instance
-      run: |-
-        gcloud compute instances create "$GCE_INSTANCE" \
-        --zone "$GCE_INSTANCE_ZONE" \
-        --service-account "$SERVICE_ACCOUNT" \
-        --tags http-server \
-        --machine-type e2-medium
+    # - name: Create Instance
+    #   run: |-
+    #     gcloud compute instances create "$GCE_INSTANCE" \
+    #     --zone "$GCE_INSTANCE_ZONE" \
+    #     --service-account "$SERVICE_ACCOUNT" \
+    #     --tags http-server \
+    #     --machine-type e2-medium
 
     - name: Connect With SSH and initialize
       run: |-
         gcloud compute ssh \
-        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" 
-        sudo apt-get update &&
-        sudo apt install git &&
-        sudo apt install npm &&
-        sudo git clone http://github.com/${{github.repository}} &&
-        cd ./songclient && sudo npm ci --production &&
-        sudo npm run build && cd ../server &&
-        npm ci --production
+        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
+          sudo apt-get update &&
+          sudo apt install git &&
+          sudo apt install npm &&
+          sudo git clone http://github.com/${{github.repository}} &&
+          cd ./songclient && sudo npm ci --production &&
+          sudo npm run build && cd ../server &&
+          sudo npm ci --production
+        '
+      # sudo npm install pm2@latest -g
       #  && sudo apt-get -y install default-mysql-server &&
       #  npm run migrate
 
