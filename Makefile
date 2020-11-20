@@ -65,11 +65,11 @@ send \"y\r\"
 expect \"Reload privilege tables now?\"
 send \"y\r\"
 expect eof
-)"
+")
 endef
 
 mysql_secure:
-	@$(MAKE) echo "$$SECURE_MYSQL"
+	@echo "$$SECURE_MYSQL"
 
 restart-sql:
 	$(MAKE) ssh-cmd CMD='docker restart mysql'
