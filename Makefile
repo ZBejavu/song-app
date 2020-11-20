@@ -68,7 +68,8 @@ expect eof
 "
 endef
 
-mysql_secure: ; $(value SECURE_MYSQL)
+mysql_secure:
+	@echo "$$SECURE_MYSQL"
 
 restart-sql:
 	$(MAKE) ssh-cmd CMD='docker restart mysql'

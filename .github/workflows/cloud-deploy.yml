@@ -71,8 +71,7 @@ jobs:
     #       cd ./songclient && sudo npm ci --production &&
     #       sudo npm run build && cd ../server &&
     #       sudo npm ci --production
-    #       sudo apt-get -y install default-mysql-server &&
-    #       sudo apt -y install expect
+    #       sudo apt-get -y install default-mysql-server
     #     '
     - name: Connect With SSH and pull Origin
       run: |-
@@ -83,7 +82,7 @@ jobs:
           cd ./songclient && sudo npm ci --production &&
           sudo npm run build && cd ../server &&
           sudo npm ci --production &&
-          make mysql_secure 
+          PWD=$PWD sh mysqlscript.sh
         '
       # sudo npm install pm2@latest -g
       #  && sudo apt-get -y install default-mysql-server &&
