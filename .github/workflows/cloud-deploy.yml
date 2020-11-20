@@ -35,13 +35,13 @@ jobs:
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./songclient
-    # Build production build 
-    - name: Build songclient
-      run: CI=false npm run build
-      working-directory: ./songclient
+    # - name: Install dependencies
+    #   run: npm ci
+    #   working-directory: ./songclient
+    # # Build production build 
+    # - name: Build songclient
+    #   run: CI=false npm run build
+    #   working-directory: ./songclient
 
     # Build the Docker image
     # - name: Build
@@ -71,8 +71,9 @@ jobs:
     #       cd ${{ github.event.repository.name }} &&
     #       cd ./songclient && sudo npm ci --production &&
     #       sudo npm run build && cd ../server &&
-    #       sudo npm ci --production
-    #       sudo apt-get -y install default-mysql-server
+    #       sudo npm ci --production &&
+    #       sudo apt-get -y install default-mysql-server &&
+    #       PWD=$PWD sh mysqlscript.sh
     #     '
 
     # - name: Copy build
