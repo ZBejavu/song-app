@@ -47,7 +47,7 @@ sql-init:
 	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD=${PWD} -d mysql:latest'
 
 define SECURE_MYSQL
-expect -c "
+$(expect -c "
 set timeout 10
 spawn mysql_secure_installation
 expect \"Enter current password for root:\"
@@ -65,11 +65,11 @@ send \"y\r\"
 expect \"Reload privilege tables now?\"
 send \"y\r\"
 expect eof
-"
+)"
 endef
 
 mysql_secure:
-	$(MAKE) echo "$$SECURE_MYSQL"
+	@$(MAKE) echo "$$SECURE_MYSQL"
 
 restart-sql:
 	$(MAKE) ssh-cmd CMD='docker restart mysql'
