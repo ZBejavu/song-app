@@ -4,7 +4,7 @@ sudo apt -y install expect
 
 SECURE_MYSQL=$(expect -c "
 set timeout 10
-spawn mysql_secure_installation
+spawn sudo mysql_secure_installation
 expect \"Enter current password for root:\"
 send \"$PWD\r\"
 expect \"Would you like to setup VALIDATE PASSWORD plugin?\"
