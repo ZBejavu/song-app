@@ -32,8 +32,8 @@ jobs:
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
-    # - run: |-
-    #     gcloud --quiet auth configure-docker
+    - run: |-
+        gcloud --quiet auth configure-docker
     - name: Install dependencies
       run: npm ci
       working-directory: ./songclient
