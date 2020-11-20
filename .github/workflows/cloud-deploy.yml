@@ -32,15 +32,15 @@ jobs:
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
-    - run: |-
-        gcloud --quiet auth configure-docker
-    # - name: Install dependencies
-    #   run: npm ci
-    #   working-directory: ./songclient
-    # # Build production build so docker will have an up to date image
-    # - name: Build songclient
-    #   run: CI=false npm run build
-    #   working-directory: ./songclient
+    # - run: |-
+    #     gcloud --quiet auth configure-docker
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./songclient
+    # Build production build 
+    - name: Build songclient
+      run: CI=false npm run build
+      working-directory: ./songclient
 
     # Build the Docker image
     # - name: Build
@@ -73,17 +73,28 @@ jobs:
     #       sudo npm ci --production
     #       sudo apt-get -y install default-mysql-server
     #     '
+    - name: Copy build
+      run: |-
+        gcloud compute scp \
+        --recurse \
+        --zone "$GCE_INSTANCE_ZONE" \
+        ./build $USER@$GCE_INSTANCE:${{ github.event.repository.name }}/client
+      working-directory: ./client
     - name: Connect With SSH and pull Origin
       run: |-
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
           cd ${{ github.event.repository.name }} &&
+          sudo git fetch --all &&
+          sudo git checkout sequelize &&
+          sudo git stash &&
           sudo git pull origin &&
-          cd ./songclient && sudo npm ci --production &&
-          sudo npm run build && cd ../server &&
-          sudo npm ci --production &&
-          PWD=$PWD sh mysqlscript.sh
+          cd ./server &&
+          sudo npm ci --production
         '
+      #    cd ./songclient && sudo npm ci --production &&
+      #    sudo npm run build && 
+      # PWD=$PWD sh mysqlscript.sh
       # sudo npm install pm2@latest -g
       #  && sudo apt-get -y install default-mysql-server &&
       #  npm run migrate
