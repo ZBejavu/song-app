@@ -2,7 +2,7 @@ import axios from 'axios';
 
 console.log(process.env.NODE_ENV , "environment")
 const network = axios.create({
-  baseURL: 'http://127.0.0.1:5000'
+  baseURL: 'http://localhost:5000'
 });
 
 const getToken = () => {
