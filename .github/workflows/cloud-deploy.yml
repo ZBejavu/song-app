@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: instance-testing5  # TODO: update to instance name
+  GCE_INSTANCE: instance-testing24  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
@@ -96,7 +96,7 @@ jobs:
           sudo npm run build && 
           cd ../server &&
           sudo npm ci --production
-          sudo sh createenv.sh $DB_PASS
+          sudo sh createenv.sh ${{secrets.DB_PASS}} zach 
         '
     - name: Create MySql
       run: |-
@@ -104,9 +104,9 @@ jobs:
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
           cd ${{ github.event.repository.name }} &&
           sudo apt-get -y install default-mysql-server &&
-          echo "dbpass: $DB_PASS" &&
-          sh mysqlscript.sh $DB_PASS &&
-          sudo sh mysqlconfig.sh $DB_PASS
+          echo "dbpass: ${{ secrets.DB_PASS }}" &&
+          sh mysqlscript.sh ${{ secrets.DB_PASS }} &&
+          sudo sh mysqlconfig.sh ${{secrets.DB_PASS}}
         '
     #      sudo mysql < mysqlconfig.txt
     # - name: Configure MySql
