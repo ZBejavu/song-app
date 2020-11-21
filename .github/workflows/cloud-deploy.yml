@@ -8,11 +8,11 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: instance-test123  # TODO: update to instance name
+  GCE_INSTANCE: instance-testing12  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
-  PWD: ${{ secrets.PWD }}
+  DB_PASS: ${{ secrets.PWD }}
   USER: ${{ secrets.USER }}
   GCE_HOST: ${{ secrets.DB_HOST }}
 
@@ -96,7 +96,7 @@ jobs:
           sudo npm run build && 
           cd ../server &&
           sudo npm ci --production
-          sudo sh createenv.sh $PWD
+          sudo sh createenv.sh $DB_PASS
         '
     - name: Create MySql
       run: |-
@@ -104,8 +104,10 @@ jobs:
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
           cd ${{ github.event.repository.name }} &&
           sudo apt-get -y install default-mysql-server &&
-          sh mysqlscript.sh $PWD
+          sh mysqlscript.sh $DB_PASS &&
+          sudo sh mysqlconfig.sh $DB_PASS
         '
+    #      sudo mysql < mysqlconfig.txt
     # - name: Configure MySql
     #   run: |-
     #     gcloud compute ssh \
@@ -113,7 +115,7 @@ jobs:
     #       cd ${{ github.event.repository.name }} &&
     #       sudo mysql -u root #
     #     '
-      #    PWD=$PWD sh mysqlscript.sh 
+      #    DB_PASS=$DB_PASS sh mysqlscript.sh 
       # sudo apt-get -y install default-mysql-server &&
       # sudo mysql -u root # &&
       # USE mysql; &&
@@ -122,7 +124,7 @@ jobs:
       # exit;
       #    cd ./songclient && sudo npm ci --production &&
       #    sudo npm run build && 
-      # PWD=$PWD sh mysqlscript.sh
+      # DB_PASS=$DB_PASS sh mysqlscript.sh
       # sudo npm install pm2@latest -g
       #  && sudo apt-get -y install default-mysql-server &&
       #  npm run migrate
@@ -161,13 +163,13 @@ jobs:
     #     gcloud compute instances update-container "$GCE_INSTANCE" \
     #       --zone "$GCE_INSTANCE_ZONE" \
     #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
-    #       --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.PWD}}]
+    #       --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.DB_PASS}}]
 
     # - name: Connect With SSH start mysql and migrate
     #   run: |-
     #     gcloud compute ssh \
     #     --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE"
-    #     docker run --name mysql -e MYSQL_ROOT_PASSWORD=$PWD -d mysql:latest &&
+    #     docker run --name mysql -e MYSQL_ROOT_PASSWORD=$DB_PASS -d mysql:latest &&
     #     docker restart mysql &&
     #     docker run --name migrate -d gcr.io/$PROJECT_ID/$GCE_INSTANCE-migrate-image:2a660a6540756e47f886a5d1b6681d97ad316171 --rm
         
