@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: instance-test3  # TODO: update to instance name
+  GCE_INSTANCE: instance-test123  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
@@ -96,21 +96,22 @@ jobs:
           sudo npm run build && 
           cd ../server &&
           sudo npm ci --production
+          sudo sh createenv.sh $PWD
         '
-    # - name: Create MySql
-    #   run: |-
-    #     gcloud compute ssh \
-    #     --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
-    #       cd ${{ github.event.repository.name }} &&
-    #       sudo apt-get -y install default-mysql-server &&
-    #       PWD=$PWD sh mysqlscript.sh 
-    #     '
+    - name: Create MySql
+      run: |-
+        gcloud compute ssh \
+        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
+          cd ${{ github.event.repository.name }} &&
+          sudo apt-get -y install default-mysql-server &&
+          sh mysqlscript.sh $PWD
+        '
     # - name: Configure MySql
     #   run: |-
     #     gcloud compute ssh \
     #     --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
     #       cd ${{ github.event.repository.name }} &&
-    #       mysql -u root #
+    #       sudo mysql -u root #
     #     '
       #    PWD=$PWD sh mysqlscript.sh 
       # sudo apt-get -y install default-mysql-server &&
