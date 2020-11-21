@@ -101,8 +101,13 @@ jobs:
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
           cd ${{ github.event.repository.name }} &&
-          PWD=$PWD sh mysqlscript.sh 
+          sudo mysql -u root # &&
+          USE mysql; 
+          UPDATE user SET plugin='mysql_native_password' WHERE User='root'; 
+          FLUSH PRIVILEGES; 
+          exit;
         '
+      #    PWD=$PWD sh mysqlscript.sh 
       # sudo apt-get -y install default-mysql-server &&
       # sudo mysql -u root # &&
       # USE mysql; &&

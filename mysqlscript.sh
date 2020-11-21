@@ -20,7 +20,7 @@ sudo apt -y install expect
 
 SECURE_MYSQL=$(expect -c "
 set timeout 10
-spawn sudo mysql -u root #
+spawn mysql -u root #
 expect \"MariaDB\"
 send \"USE mysql;\r\"
 expect \"MariaDB\"
