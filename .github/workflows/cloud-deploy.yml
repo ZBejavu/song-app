@@ -58,8 +58,8 @@ jobs:
         --zone "$GCE_INSTANCE_ZONE" \
         --service-account "$SERVICE_ACCOUNT" \
         --tags http-server \
-        --address 34.19.193.89 \
         --machine-type e2-medium
+    #     --address 34.19.193.89 \
 
     # - name: Connect With SSH and initialize
     #   run: |-
