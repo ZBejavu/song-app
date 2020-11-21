@@ -21,13 +21,13 @@ sudo apt -y install expect
 SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn sudo mysql -u root #
-expect \"MariaDB [(none)]>\"
+expect \"MariaDB\"
 send \"USE mysql;\r\"
-expect \"MariaDB [mysql]>\"
+expect \"MariaDB\"
 send \"UPDATE user SET plugin='mysql_native_password' WHERE User='root';\r\"
-expect \"MariaDB [mysql]>\"
+expect \"MariaDB\"
 send \"FLUSH PRIVILEGES;\r\"
-expect \"MariaDB [mysql]>\"
+expect \"MariaDB\"
 send \"exit;\r\"
 expect eof
 ")
