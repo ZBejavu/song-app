@@ -6,6 +6,12 @@ SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn sudo mysql_secure_installation
 expect \"Enter current password for root (enter for none):\"
+send \"\r\"
+expect \"Set root password?\"
+send \"y\r\"
+expect \"New password:\"
+send \"$PWD\r\"
+expect \"Re-enter new password:\"
 send \"$PWD\r\"
 expect \"Would you like to setup VALIDATE PASSWORD plugin?\"
 send \"n\r\" 
