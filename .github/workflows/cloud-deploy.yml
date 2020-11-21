@@ -12,7 +12,7 @@ env:
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
-  DB_PASS: ${{ secrets.PWD }}
+  DB_PASS: ${{ secrets.DB_PASS }}
   USER: ${{ secrets.USER }}
   GCE_HOST: ${{ secrets.DB_HOST }}
 
@@ -104,6 +104,7 @@ jobs:
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
           cd ${{ github.event.repository.name }} &&
           sudo apt-get -y install default-mysql-server &&
+          echo "dbpass: $DB_PASS" &&
           sh mysqlscript.sh $DB_PASS &&
           sudo sh mysqlconfig.sh $DB_PASS
         '
