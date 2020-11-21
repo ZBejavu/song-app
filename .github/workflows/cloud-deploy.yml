@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: instance-test2  # TODO: update to instance name
+  GCE_INSTANCE: instance-test3  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
@@ -70,6 +70,7 @@ jobs:
           sudo apt install -y git &&
           sudo apt install -y npm &&
           sudo git clone http://github.com/${{github.repository}} &&
+          cd ${{ github.event.repository.name }} &&
           sudo git fetch --all &&
           sudo git checkout sequelize
         '
