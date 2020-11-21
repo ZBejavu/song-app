@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: instance-3  # TODO: update to instance name
+  GCE_INSTANCE: instance-test  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
@@ -52,13 +52,14 @@ jobs:
     #   run: |-
     #     docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
-    # - name: Create Instance
-    #   run: |-
-    #     gcloud compute instances create "$GCE_INSTANCE" \
-    #     --zone "$GCE_INSTANCE_ZONE" \
-    #     --service-account "$SERVICE_ACCOUNT" \
-    #     --tags http-server \
-    #     --machine-type e2-medium
+    - name: Create Instance
+      run: |-
+        gcloud compute instances create "$GCE_INSTANCE" \
+        --zone "$GCE_INSTANCE_ZONE" \
+        --service-account "$SERVICE_ACCOUNT" \
+        --tags http-server \
+        --address 34.19.193.89 \
+        --machine-type e2-medium
 
     # - name: Connect With SSH and initialize
     #   run: |-
