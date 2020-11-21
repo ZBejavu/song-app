@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: final-instance  # TODO: update to instance name
+  GCE_INSTANCE: real-final  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
   SERVICE_USER: ${{ secrets.SERVICE_USER }}
@@ -52,7 +52,7 @@ jobs:
     #   run: |-
     #     docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
 
-    - name: Create Instance
+    - name: Create Instance # ---------------------------- use for first time setup
       run: |-
         gcloud compute instances create "$GCE_INSTANCE" \
         --zone "$GCE_INSTANCE_ZONE" \
@@ -62,7 +62,7 @@ jobs:
 
     #     --address 34.19.193.89 \
 
-    - name: Clone and Initialize
+    - name: Clone and Initialize # ---------------------------- use for first time setup
       run: |-
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
@@ -98,7 +98,7 @@ jobs:
           sudo npm ci --production
           sudo sh createenv.sh ${{secrets.DB_PASS}} zach 
         '
-    - name: Create MySql
+    - name: Create MySql # ---------------------------- use for first time setup
       run: |-
         gcloud compute ssh \
         --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
@@ -108,6 +108,16 @@ jobs:
           sh mysqlscript.sh ${{ secrets.DB_PASS }} &&
           sudo sh mysqlconfig.sh ${{secrets.DB_PASS}} &&
           sudo mysql < mysqlconfig.txt &&
+          sudo rm mysqlconfig.txt &&
+          cd server && npm run dbup
+        '
+      continue-on-error: true
+
+    - name: create migrate seed
+      run: |-
+        gcloud compute ssh \
+        --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
+          cd ${{ github.event.repository.name }} &&
           sudo rm mysqlconfig.txt &&
           cd server && npm run dbup
         '
