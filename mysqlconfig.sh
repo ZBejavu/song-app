@@ -6,6 +6,6 @@ echo "use mysql;" > $file
 echo "CREATE USER 'zach'@'localhost' IDENTIFIED BY '$1';" >> $file
 echo "GRANT ALL PRIVILEGES ON *.* TO 'zach'@'localhost' WITH GRANT OPTION;" >> $file
 echo "flush privileges;" >> $file
-echo "quit;" >> $file
+echo "exit;" >> $file
 cat $file
 # echo "update user set password="$1" where User='root';" >> $file
