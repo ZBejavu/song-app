@@ -21,10 +21,10 @@ sudo apt -y install expect
 SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn sudo mysql -u root #
-spawn USE mysql;
-spawn UPDATE user SET plugin='mysql_native_password' WHERE User='root';
-spawn FLUSH PRIVILEGES;
-spawn exit;
+send \"USE mysql;\r\"
+send \"UPDATE user SET plugin='mysql_native_password' WHERE User='root';\r\"
+send \"FLUSH PRIVILEGES;\r\"
+send \"exit;\r\"
 expect eof
 ")
 
