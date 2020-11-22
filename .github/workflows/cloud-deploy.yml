@@ -7,14 +7,12 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-  GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: private-repo-test  # TODO: update to instance name
+  GCE_INSTANCE: private-repo-test2  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-  SERVICE_USER: ${{ secrets.SERVICE_USER }}
   DB_PASS: ${{ secrets.DB_PASS }}
-  USER: ${{ secrets.USER }}
-  GCE_HOST: ${{ secrets.DB_HOST }}
+  DB_USER: ${{ secrets.DB_USER }}
+#  GCE_HOST: ${{ secrets.DB_HOST }}
 
 jobs:
   setup-build-publish-deploy:
@@ -44,15 +42,16 @@ jobs:
         --machine-type e2-medium
     #     --address 34.19.193.89 \
 
-
     # - name: Clone and Initialize # ---------------------------- ONLY FIRST TIME SETUP -- CHANGE checkout to your branch
+    #   #for private repositories, add githubaccesstokensecret and clone the following url :
+    #   #sudo git clone https://${{secrets.ACCESS_USER}}:${{secrets.ACCESS_TOKEN}}@github.com/${{github.repository}}.git
     #   run: |-
     #     gcloud compute ssh \
     #     --zone "$GCE_INSTANCE_ZONE" "$GCE_INSTANCE" --command '
     #       sudo apt-get -y update &&
     #       sudo apt install -y git &&
     #       sudo apt install -y npm &&
-    #       sudo git clone http://github.com/${{github.repository}} &&
+    #       sudo git clone https://${{secrets.ACCESS_USER}}:${{secrets.ACCESS_TOKEN}}@github.com/${{github.repository}}.git &&
     #       cd ${{ github.event.repository.name }} &&
     #       sudo git fetch --all &&
     #       sudo git checkout sequelize && 
@@ -73,7 +72,7 @@ jobs:
     #       sudo npm run build && 
     #       cd ../server &&
     #       sudo npm ci --production &&
-    #       sudo sh createenv.sh ${{secrets.DB_PASS}} zach 
+    #       sudo sh createenv.sh ${{secrets.DB_PASS}} ${{secrets.DB_USER}} 
     #     '
     # - name: Create MySql # ---------------------------- USE ONLY FOR FIRST TIME SETUP ! 
     #   run: |-
@@ -108,7 +107,7 @@ jobs:
 
 
 
-    
+
     #      sudo mysql < mysqlconfig.txt
     # - name: Configure MySql
     #   run: |-
