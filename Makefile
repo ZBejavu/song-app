@@ -48,6 +48,7 @@ deploy:
 			-p 8080:8080 \
 			$(REMOTE_TAG) \
 			'
+	@echo "Good Job Deploy Succeded !"
 
 sql-init:
 	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD="password" -d mysql:latest'
