@@ -25,4 +25,4 @@ RUN git clone https://github.com/vishnubob/wait-for-it.git
 
 EXPOSE 8080
 
-CMD ["node", "."]
+CMD ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "npm", "run", "spinup"]

@@ -39,6 +39,7 @@ deploy:
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
 	@echo "removing old container..."
+	-${MAKE} sql-init
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
 	@echo "starting new container..."
