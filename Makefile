@@ -46,6 +46,7 @@ deploy:
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
 			-p 8080:8080 \
+			$(REMOTE_TAG) \
 			'
 
 sql-init:
