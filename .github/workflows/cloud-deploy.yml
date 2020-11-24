@@ -3,7 +3,7 @@ name: Build and Deploy to Google Compute Engine
 on:
   push:
     branches:
-    - sequelize
+    - specifybranch
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}

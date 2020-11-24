@@ -21,6 +21,8 @@ RUN npm install --production
 
 RUN npm rebuild bcrypt --build-from-source
 
-EXPOSE 5000
+RUN git clone https://github.com/vishnubob/wait-for-it.git
+
+EXPOSE 8080
 
 CMD ["node", "."]

@@ -14,7 +14,8 @@ ssh:
 		--zone=$(ZONE)
 
 ssh-cmd:
-	@gcloud --quiet compute ssh $(SSH_STRING) --command "$(CMD)"
+	@gcloud --quiet compute ssh \
+		--zone ${ZONE} ${GCE_INSTANCE} --command "$(CMD)"
 
 build:
 	docker build -t $(LOCAL_TAG) .
@@ -30,9 +31,11 @@ push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
 
+
+# $(MAKE) ssh-cmd CMD='sudo docker-credential-gcr configure-docker'
+# 	@echo "pulling new container image..."
+
 deploy: 
-	$(MAKE) ssh-cmd CMD='sudo docker-credential-gcr configure-docker'
-	@echo "pulling new container image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
 	@echo "removing old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
@@ -41,10 +44,11 @@ deploy:
 	@$(MAKE) ssh-cmd CMD='\
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
-			-p 5000:5000 \
+			-p 8080:8080 \
+			'
 
 sql-init:
-	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD=${PWD} -d mysql:latest'
+	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD="password" -d mysql:latest'
 
 define SECURE_MYSQL
 expect -c "

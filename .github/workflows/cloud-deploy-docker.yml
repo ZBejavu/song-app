@@ -3,7 +3,7 @@ name: Build and Deploy to Google Compute Engine
 on:
   push:
     branches:
-    - specifyabranch
+    - sequelize
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
@@ -58,9 +58,11 @@ jobs:
         --service-account "$SERVICE_ACCOUNT" \
         --tags http-server \
         --machine-type e2-medium
-    - name: Deploy to containerized instance
-      run: |-
-        gcloud compute instances update-container "$GCE_INSTANCE" \
-          --zone "$GCE_INSTANCE_ZONE" \
-          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
-          --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.PWD}}]
+    - name: deploy
+      run: make deploy
+    # - name: Deploy to containerized instance
+    #   run: |-
+    #     gcloud compute instances update-container "$GCE_INSTANCE" \
+    #       --zone "$GCE_INSTANCE_ZONE" \
+    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
+    #       --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.PWD}}]
