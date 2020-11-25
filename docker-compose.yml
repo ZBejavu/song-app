@@ -29,6 +29,11 @@ services:
           - "8080:8080"
       networks: 
         - song-network
+      environment:
+        MYSQL_USER: root
+        MYSQL_PASSWORD: password
+        MYSQL_DATABASE: database_development
+        MYSQL_HOST: mysql
 
     # migrateAndSeed:
     #     image: songappcomplete

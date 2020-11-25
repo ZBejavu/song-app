@@ -42,7 +42,7 @@ jobs:
       working-directory: ./songclient
     # Build production build 
     - name: Create production build
-      run: CI=false npm run build
+      run: CI=false INLINE_RUNTIME_CHUNK=false npm run build
       working-directory: ./songclient
      #Build the Docker image
     - name: Build image
