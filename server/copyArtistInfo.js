@@ -29,7 +29,7 @@ module.exports =[
     {
         "id": 4,
         "name": "Paramore",
-        "cover_img": "https://scontent.ftlv1-2.fna.fbcdn.net/v/t1.0-9/p960x960/34157759_10151126413899963_4585427619171794944_o.jpg?_nc_cat=106&_nc_sid=85a577&_nc_ohc=Y1AyvFfKloMAX9b_4H7&_nc_ht=scontent.ftlv1-2.fna&tp=6&oh=2f675b8cf2e933928f9bf1813422dd75&oe=5F84F1F9",
+        "cover_img": "https://i.pinimg.com/originals/7a/08/e1/7a08e10667ef3c32f1c9fd644476ba9a.png",
         "created_at": "2020-09-24",
         "updated_at": "2020-09-24",
         "uploaded_at": "2015-04-11",

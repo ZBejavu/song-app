@@ -2,8 +2,6 @@ ZONE=${GCE_INSTANCE_ZONE}
 LOCAL_TAG=${GCE_INSTANCE}-image:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/${PROJECT_ID}/$(LOCAL_TAG)
 CONTAINER_NAME=app-container
-# SEED_TAG=${GCE_INSTANCE}-seed-image:$(GITHUB_SHA)
-# REMOTE_SEED_TAG=gcr.io/$(PROJECT_ID)/$(SEED_TAG)
 
 ssh-cmd:
 	@gcloud --quiet compute ssh \
@@ -46,7 +44,7 @@ deploy:
 			-e MYSQL_DATABASE=database_development \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
-			-p 8080:8080 \
+			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
 		'
 	@echo "Good Job Deploy Succeded !"

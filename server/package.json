@@ -10,8 +10,8 @@
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "seed": "node_modules/.bin/sequelize db:seed:all",
     "spinup": "npm run migrate && node index.js",
+    "spinseedup": "npm run migrate && npm run seed && node index.js",
     "initialize": "npm run create && npm run migrate",
-    "dbup2": "npm run migrate && npm run seed",
     "dbup": "npm run create && npm run migrate && npm run seed"
   },
   "keywords": [],
