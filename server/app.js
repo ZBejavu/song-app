@@ -19,7 +19,11 @@ app.use(express.static('../songclient/build'));
 // app.use(cors())
 app.use(express.json())
 app.use(morgan("tiny"));
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
