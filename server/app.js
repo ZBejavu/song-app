@@ -17,7 +17,7 @@ const helmet = require('helmet');
 // });
 
 // app.use(cors())
-app.use(express.static("../client/build"));
+app.use(express.static("../songclient/build"));
 app.use(express.json())
 app.use(morgan("tiny"));
 app.use(
