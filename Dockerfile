@@ -21,7 +21,7 @@ ADD /songclient/build .
 
 WORKDIR /server
 
-COPY /server/package.json /songclient/package-lock.json ./
+COPY /server/package.json /server/package-lock.json ./
 
 RUN npm install --production
 
