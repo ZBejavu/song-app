@@ -17,13 +17,13 @@ push:
 	docker push $(REMOTE_TAG)
 
 create:
-	$(MAKE)	gcloud compute instances create ${GCE_INSTANCE} \
-	--image-project cos-cloud \
-	--image cos-stable-85-13310-1041-28 \
-	--zone $(ZONE) \
-	--service-account ${SERVICE_ACCOUNT} \
-	--tags http-server \
-	--machine-type e2-medium
+	@gcloud compute instances create ${GCE_INSTANCE} \
+		--image-project cos-cloud \
+		--image cos-stable-85-13310-1041-28 \
+		--zone $(ZONE) \
+		--service-account ${SERVICE_ACCOUNT} \
+		--tags http-server \
+		--machine-type e2-medium
 
 deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
@@ -55,11 +55,11 @@ network-init:
 	$(MAKE) ssh-cmd CMD='docker network create my-network'
 
 create-firewall-rule:
-	$(MAKE) gcloud compute firewall-rules create default-allow-http-${SERVER_PORT} \
-    --allow tcp:${SERVER_PORT} \
-    --source-ranges 0.0.0.0/0 \
-    --target-tags http-server \
-    --description "Allow port ${SERVER_PORT} access to http-server"
+	@gcloud compute firewall-rules create default-allow-http-${SERVER_PORT} \
+		--allow tcp:${SERVER_PORT} \
+		--source-ranges 0.0.0.0/0 \
+		--target-tags http-server \
+		--description "Allow port ${SERVER_PORT} access to http-server"
 
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
