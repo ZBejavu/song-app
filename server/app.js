@@ -4,7 +4,7 @@ const app = express()
 const path = require('path')
 const morgan = require('morgan');
 const helmet = require('helmet');
-app.use(express.static('../songclient/build'));
+// app.use(express.static('../songclient/build'));
 // const { Client } = require("@elastic/elasticsearch");
 // const client = new Client({
 //   cloud: {

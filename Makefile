@@ -2,8 +2,8 @@ ZONE=${GCE_INSTANCE_ZONE}
 LOCAL_TAG=${GCE_INSTANCE}-image:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/${PROJECT_ID}/$(LOCAL_TAG)
 CONTAINER_NAME=app-container
-SEED_TAG=${GCE_INSTANCE}-migrate-image:$(GITHUB_SHA)
-REMOTE_SEED_TAG=gcr.io/$(PROJECT_ID)/$(SEED_TAG)
+# SEED_TAG=${GCE_INSTANCE}-seed-image:$(GITHUB_SHA)
+# REMOTE_SEED_TAG=gcr.io/$(PROJECT_ID)/$(SEED_TAG)
 
 ssh-cmd:
 	@gcloud --quiet compute ssh \
