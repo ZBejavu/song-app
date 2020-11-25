@@ -48,7 +48,7 @@ deploy:
 			-e MYSQL_PASSWORD=${DB_PASS} \
 			-p 8080:8080 \
 			$(REMOTE_TAG) \
-			'
+		'
 	@echo "Good Job Deploy Succeded !"
 
 network-init:
@@ -63,14 +63,14 @@ create-firewall-rule:
 
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
-	docker run --name=${DB_HOST} \
-	-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
-	-e MYSQL_DATABASE=database_development \
-	-e MYSQL_USER=${DB_USER} \
-	-e MYSQL_PASSWORD=${DB_PASS} \
-	--network my-network \
-	-d mysql:8 \
-	'
+		docker run --name=${DB_HOST} \
+			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
+			-e MYSQL_DATABASE=database_development \
+			-e MYSQL_USER=${DB_USER} \
+			-e MYSQL_PASSWORD=${DB_PASS} \
+			--network my-network \
+			-d mysql:8 \
+		'
 
 
 # build-seed:
