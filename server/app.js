@@ -1,8 +1,9 @@
 const express = require('express')
-const cors = require('cors')
+// const cors = require('cors')
 const app = express()
 const path = require('path')
 const morgan = require('morgan');
+const helmet = require('helmet');
 app.use(express.static('../songclient/build'));
 // const { Client } = require("@elastic/elasticsearch");
 // const client = new Client({
@@ -15,13 +16,14 @@ app.use(express.static('../songclient/build'));
 //   },
 // });
 
-app.use(cors())
+// app.use(cors())
 app.use(express.json())
 app.use(morgan("tiny"));
+app.use(helmet());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// })
 
 app.use('/api/', require('./api'))
 
