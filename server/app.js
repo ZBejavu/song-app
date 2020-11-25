@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const path = require('path')
 const morgan = require('morgan');
 app.use(express.static('../songclient/build'));
 // const { Client } = require("@elastic/elasticsearch");
@@ -24,6 +25,9 @@ app.get('/', (req, res) => {
 
 app.use('/api/', require('./api'))
 
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../songclient/build", "index.html"));
+});
 
 
 module.exports = app;

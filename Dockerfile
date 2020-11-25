@@ -11,7 +11,7 @@
 
 FROM node:12
 
-WORKDIR /songclient/build
+# WORKDIR /songclient/build
 
 # COPY --from=builder ./build .
 
