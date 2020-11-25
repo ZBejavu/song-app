@@ -5,14 +5,6 @@ WORKDIR /songclient/build
 
 ADD /songclient/build .
 
-# WORKDIR /songclient
-
-# COPY /songclient .
-
-# RUN npm install --production
-
-# RUN npm run build 
-
 WORKDIR /server
 
 COPY /server .

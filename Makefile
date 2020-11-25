@@ -1,90 +1,81 @@
-PROJECT_ID=${GCP_ID}
 ZONE=${GCE_INSTANCE_ZONE}
 LOCAL_TAG=${GCE_INSTANCE}-image:$(GITHUB_SHA)
-MIGRATE_TAG=${GCE_INSTANCE}-migrate-image:$(GITHUB_SHA)
-REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
-REMOTE_MIGRATE_TAG=gcr.io/$(PROJECT_ID)/$(MIGRATE_TAG)
-CONTAINER_NAME=songapp-container
-MIGRATE_NAME=migrate-image
-# DB_NAME=storybooks
-SSH_STRING=${USER}${GCE_INSTANCE}
-ssh:
-	gcloud compute ssh $(SSH_STRING) \
-		--project=$(PROJECT_ID) \
-		--zone=$(ZONE)
+REMOTE_TAG=gcr.io/${PROJECT_ID}/$(LOCAL_TAG)
+CONTAINER_NAME=app-container
+SEED_TAG=${GCE_INSTANCE}-migrate-image:$(GITHUB_SHA)
+REMOTE_SEED_TAG=gcr.io/$(PROJECT_ID)/$(SEED_TAG)
 
 ssh-cmd:
 	@gcloud --quiet compute ssh \
-		--zone ${ZONE} ${GCE_INSTANCE} --command "$(CMD)"
+		--zone $(ZONE) ${GCE_INSTANCE} --command "$(CMD)"
 
 build:
 	docker build -t $(LOCAL_TAG) .
-
-build-migrate:
-	docker build -t ${MIGRATE_TAG} ./server
-
-push-migrate:
-	docker tag ${MIGRATE_TAG} ${REMOTE_MIGRATE_TAG}
-	docker push ${REMOTE_MIGRATE_TAG}
 
 push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
 
-
-# $(MAKE) ssh-cmd CMD='sudo docker-credential-gcr configure-docker'
-# 	@echo "pulling new container image..."
+create:
+    $(MAKE)	gcloud compute instances create ${GCE_INSTANCE} \
+		--image-project cos-cloud \
+		--image cos-stable-85-13310-1041-28 \
+		--zone $(ZONE) \
+		--service-account ${SERVICE_ACCOUNT} \
+		--tags http-server \
+		--machine-type e2-medium
 
 deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
+	@echo "pulling image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
-	@echo "removing old container..."
+	@echo "creating network..."
+	-$(MAKE) network-init
+	@echo "initializing sql (if exists, continue on error)..."
 	-${MAKE} sql-init
+	@echo "stopping old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
+	@echo "removing old container..."
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
 	@echo "starting new container..."
 	@$(MAKE) ssh-cmd CMD='\
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
+			--network my-network \
+			-e MYSQL_HOST=${DB_HOST} \
+			-e MYSQL_DATABASE=database_development \
+			-e MYSQL_USER=${DB_USER} \
+			-e MYSQL_PASSWORD=${DB_PASS} \
 			-p 8080:8080 \
 			$(REMOTE_TAG) \
 			'
 	@echo "Good Job Deploy Succeded !"
 
+network-init:
+	$(MAKE) ssh-cmd CMD='docker network create my-network'
+
+create-firewall-rule:
+	$(MAKE) gcloud compute firewall-rules create default-allow-http-${SERVER_PORT} \
+    --allow tcp:${SERVER_PORT} \
+    --source-ranges 0.0.0.0/0 \
+    --target-tags http-server \
+    --description "Allow port ${SERVER_PORT} access to http-server"
+
 sql-init:
-	$(MAKE) ssh-cmd CMD='docker run --name mysql -e MYSQL_ROOT_PASSWORD="password" -d mysql:latest'
+	$(MAKE) ssh-cmd CMD=' \
+	docker run --name=${DB_HOST} \
+	-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
+	-e MYSQL_DATABASE=database_development \
+	-e MYSQL_USER=${DB_USER} \
+	-e MYSQL_PASSWORD=${DB_PASS} \
+	--network my-network \
+	-d mysql:8 \
+	'
 
-define SECURE_MYSQL
-expect -c "
-set timeout 10
-spawn mysql_secure_installation
-expect \"Enter current password for root:\"
-send \"${PWD}\r\"
-expect \"Would you like to setup VALIDATE PASSWORD plugin?\"
-send \"n\r\" 
-expect \"Change the password for root ?\"
-send \"n\r\"
-expect \"Remove anonymous users?\"
-send \"y\r\"
-expect \"Disallow root login remotely?\"
-send \"y\r\"
-expect \"Remove test database and access to it?\"
-send \"y\r\"
-expect \"Reload privilege tables now?\"
-send \"y\r\"
-expect eof
-"
-endef
 
-mysql_secure:
-	@echo "$$SECURE_MYSQL"
+# build-seed:
+# 	docker build -t ${SEED_TAG} ./server
 
-restart-sql:
-	$(MAKE) ssh-cmd CMD='docker restart mysql'
-
-migrate2:
-	$(MAKE) docker run -d --name=$(MIGRATE_NAME)
-migrate:
-	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_MIGRATE_TAG)'
-	@$(MAKE) ssh-cmd CMD='\
-		docker run -d --name=$(MIGRATE_NAME)
+# push-seed:
+# 	docker tag ${SEED_TAG} ${REMOTE_SEED_TAG}
+# 	docker push ${REMOTE_SEED_TAG}

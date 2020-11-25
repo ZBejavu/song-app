@@ -6,14 +6,14 @@ on:
     - sequelize
 
 env:
-  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-  GCP_ID: ${{ secrets.RUN_PROJECT }}
-  GCE_INSTANCE: docker-instance-1  # TODO: update to instance name
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  GCE_INSTANCE: instance-docker   # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-  PWD: ${{ secrets.PWD }}
-  USER: ${{ secrets.USER }}
-  GCE_HOST: ${{ secrets.DB_HOST }}
+  DB_PASS: ${{ secrets.DB_PASS }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  SERVER_PORT: 8080
 
 jobs:
   setup-build-publish-deploy:
@@ -28,41 +28,39 @@ jobs:
       with:
         version: '290.0.1'
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        project_id: ${{ secrets.RUN_PROJECT }}    
+        project_id: ${{ secrets.PROJECT_ID }}    
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
+    - name: Create Instance #for first time setup
+      run: make create
+    - name: Create Firewall Rule #include only if it doesnt already exist
+      run: make create-firewall-rule
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --only=production
       working-directory: ./songclient
     # Build production build 
-    - name: Build songclient
+    - name: Create production build
       run: CI=false npm run build
       working-directory: ./songclient
      #Build the Docker image
-    - name: Build
-      run: |-
-        docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" .
+    - name: Build image
+      run: make build
     # Push the Docker image to Google Container Registry
-    - name: Publish Image
-      run: |-
-        docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+    - name: Publish image
+      run: make push
+    - name: deploy
+      run: make deploy
+
+
+
     # - name: Create Instance with Container
     #   run: |-
-    #     gcloud compute instances create-with-container "$GCE_INSTANCE" \
-    #     --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
+    #     gcloud compute instances create "$GCE_INSTANCE" \
     #     --image-project cos-cloud \
     #     --image cos-stable-85-13310-1041-28 \
     #     --zone "$GCE_INSTANCE_ZONE" \
     #     --service-account "$SERVICE_ACCOUNT" \
     #     --tags http-server \
     #     --machine-type e2-medium
-    - name: deploy
-      run: make deploy
-    # - name: Deploy to containerized instance
-    #   run: |-
-    #     gcloud compute instances update-container "$GCE_INSTANCE" \
-    #       --zone "$GCE_INSTANCE_ZONE" \
-    #       --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" \
-    #       --container-env=[DB_HOST=$GCE_HOST,DB_PASSWORD=${{secrets.PWD}}]

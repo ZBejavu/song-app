@@ -29,4 +29,4 @@ COPY . .
 
 RUN npm install --production
 
-CMD ["npm", "run", "initialize"]
+CMD ["npx", "sequelize", "db:seed:all"]

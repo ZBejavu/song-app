@@ -219,11 +219,11 @@ jobs:
       #  --image-project "$PROJECT_ID" \
     # - name: Add Firewall Rules
     #   run: |-
-    #     gcloud compute firewall-rules create default-allow-http-5000 \
-    #     --allow tcp:5000 \
-    #     --source-ranges 0.0.0.0/0 \
-    #     --target-tags http-server \
-    #     --description "Allow port 5000 access to http-server"
+# gcloud compute firewall-rules create default-allow-https-8080 \
+# --allow tcp:8080 \
+# --source-ranges 0.0.0.0/0 \
+# --target-tags https-server \
+# --description "Allow port 8080 access to https-server"
     # - name: Deploy
     #   run: |-
     #     gcloud compute instances update-container "$GCE_INSTANCE" \

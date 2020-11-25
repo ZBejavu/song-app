@@ -21,21 +21,24 @@ services:
     api-server:
       depends_on:
         - mysql
-      image: songappcomplete
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: songapptest
       ports: 
-          - "5000:5000"
+          - "8080:8080"
       networks: 
         - song-network
 
-    migrateAndSeed:
-        image: songappcomplete
-        command: ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "npm", "run", "dbup"]
-        links:
-          - mysql
-        depends_on:
-          - mysql
-        networks: 
-          - song-network
+    # migrateAndSeed:
+    #     image: songappcomplete
+    #     command: ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "npm", "run", "dbup"]
+    #     links:
+    #       - mysql
+    #     depends_on:
+    #       - mysql
+    #     networks: 
+    #       - song-network
 
     # react-app:
     #     depends_on:
