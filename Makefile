@@ -17,13 +17,13 @@ push:
 	docker push $(REMOTE_TAG)
 
 create:
-    $(MAKE)	gcloud compute instances create ${GCE_INSTANCE} \
-		--image-project cos-cloud \
-		--image cos-stable-85-13310-1041-28 \
-		--zone $(ZONE) \
-		--service-account ${SERVICE_ACCOUNT} \
-		--tags http-server \
-		--machine-type e2-medium
+	$(MAKE)	gcloud compute instances create ${GCE_INSTANCE} \
+	--image-project cos-cloud \
+	--image cos-stable-85-13310-1041-28 \
+	--zone $(ZONE) \
+	--service-account ${SERVICE_ACCOUNT} \
+	--tags http-server \
+	--machine-type e2-medium
 
 deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
