@@ -35,7 +35,7 @@ jobs:
 
     # helper for authentication
     - name: Configure Docker to use gcloud command-line
-    - run: |-
+      run: |-
         gcloud --quiet auth configure-docker
 
     # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
