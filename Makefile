@@ -44,6 +44,7 @@ deploy:
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
+			--env-file=.env \
 			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
 			'
@@ -66,7 +67,6 @@ sql-init:
 		docker run --name=${DB_HOST} \
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
 			-e MYSQL_DATABASE=${DB_NAME} \
-			--env-file=.env \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
 			--network my-network \
