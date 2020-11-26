@@ -48,7 +48,7 @@ deploy:
 			$(REMOTE_TAG) \
 			'
 	@echo "Good Job Deploy Succeded !"
-	
+
 ## ADD Your Secrets Above ! -e SECRET_NAME=${SECRET_NAME} \ 
 
 network-init:

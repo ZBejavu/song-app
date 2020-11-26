@@ -1,19 +1,4 @@
-# docker build . -t songappserver
-# FROM node:12 as builder
-
-# # install and cache app dependencies
-# COPY /songclient/package.json /songclient/package-lock.json ./
-# RUN npm ci --only=production
-
-# COPY /songclient ./
-
-# RUN INLINE_RUNTIME_CHUNK=false npm run build
-
 FROM node:12
-
-# WORKDIR /songclient/build
-
-# COPY --from=builder ./build .
 
 WORKDIR /songclient/build
 
@@ -25,12 +10,25 @@ COPY /server/package.json /server/package-lock.json ./
 
 RUN npm install --production
 
-# RUN npm rebuild bcrypt --build-from-source
+# if you encounter bcrypt errors -> replace it with 'bcrypt.js',
+# just npm install it, remove bcrypt and update instances to "require('bcrypt.js')""
 
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
-EXPOSE 8080
+#Change to your Port
+EXPOSE 8080 
 
 COPY /server .
 
 CMD ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "npm", "run", "spinseedup"]
+
+# in your package.json add a script that migrates your database and then start your server
+# example -> 
+# "seed": "npx sequelize db:seed:all"
+# "undoseed": "npx sequelize db:seed:undo:all"
+# "migrate": "npx sequelize db:migrate"
+# "dev": "how you start your server"
+# "spinup": "npm run migrate && npm run dev"
+# "spinupseed": "npm run migrate && npm run undoseed && npm run seed && npm run dev" // for continuesly seeding data
+
+
