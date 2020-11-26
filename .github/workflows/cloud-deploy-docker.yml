@@ -25,7 +25,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    # Setup gcloud CLI
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@master
@@ -34,10 +33,9 @@ jobs:
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         project_id: ${{ secrets.PROJECT_ID }}
 
-    # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
-    - run: |-
-        gcloud --quiet auth configure-docker
+    - name: Configure Docker to use gcloud command-line
+      run: gcloud --quiet auth configure-docker
 
     - name: Create Instance #for first time setup
       run: make create
@@ -61,7 +59,7 @@ jobs:
     # Push the Docker image to Google Container Registry
     - name: Publish image
       run: make push
-      
+
     - name: deploy
       run: make deploy
 
