@@ -23,6 +23,14 @@ create:
 		--tags http-server \
 		--machine-type e2-medium
 
+create-env:
+	$(MAKE) ssh-cmd CMD='\
+	  file=".env" \
+	  echo ${ENV_FILE} > $file \
+	  cat $file \
+	  cat -n .env \
+	  '
+
 deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
 	@echo "pulling image..."
@@ -31,6 +39,8 @@ deploy:
 	-$(MAKE) network-init
 	@echo "initializing sql (if exists, continue on error)..."
 	-$(MAKE) sql-init
+	@echo "trying to create .env file"
+	$(MAKE) create-env
 	@echo "stopping old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	@echo "removing old container..."
@@ -44,7 +54,7 @@ deploy:
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
-			-e $ENV_FILE \
+			--env-file=.env \
 			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
 			'
