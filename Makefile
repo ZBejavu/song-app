@@ -30,7 +30,7 @@ deploy:
 	@echo "creating network..."
 	-$(MAKE) network-init
 	@echo "initializing sql (if exists, continue on error)..."
-	-${MAKE} sql-init
+	-$(MAKE) sql-init
 	@echo "stopping old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	@echo "removing old container..."
@@ -41,13 +41,15 @@ deploy:
 			--restart=unless-stopped \
 			--network my-network \
 			-e MYSQL_HOST=${DB_HOST} \
-			-e MYSQL_DATABASE=database_development \
+			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
 			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
-		'
+			'
 	@echo "Good Job Deploy Succeded !"
+	
+## ADD Your Secrets Above ! -e SECRET_NAME=${SECRET_NAME} \ 
 
 network-init:
 	$(MAKE) ssh-cmd CMD='docker network create my-network'
@@ -63,17 +65,9 @@ sql-init:
 	$(MAKE) ssh-cmd CMD=' \
 		docker run --name=${DB_HOST} \
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
-			-e MYSQL_DATABASE=database_development \
+			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
 			--network my-network \
 			-d mysql:8 \
-		'
-
-
-# build-seed:
-# 	docker build -t ${SEED_TAG} ./server
-
-# push-seed:
-# 	docker tag ${SEED_TAG} ${REMOTE_SEED_TAG}
-# 	docker push ${REMOTE_SEED_TAG}
+			'
