@@ -26,33 +26,42 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     # Setup gcloud CLI
+
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@master
       with:
         version: '290.0.1' # optional, if not provided -> resolves to latest version
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        project_id: ${{ secrets.PROJECT_ID }}    
+        project_id: ${{ secrets.PROJECT_ID }}
+
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
+
     - name: Create Instance #for first time setup
       run: make create
+
     # - name: Create Firewall Rule #include only if it doesnt already exist
     #   run: make create-firewall-rule
+
     - name: Install dependencies
       run: npm ci --only=production
       working-directory: ./songclient
+
     # Build production build 
     - name: Create production build
       run: CI=false INLINE_RUNTIME_CHUNK=false npm run build
       working-directory: ./songclient
+
     # Build the Docker image
     - name: Build image
       run: make build
+
     # Push the Docker image to Google Container Registry
     - name: Publish image
       run: make push
+      
     - name: deploy
       run: make deploy
 
