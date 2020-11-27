@@ -16,7 +16,6 @@ env:
   DB_NAME: ${{ secrets.DB_NAME }}
   ENV_FILE: ${{ secrets.ENV_FILE }}
   SERVER_PORT: 8080 # the port your server is running on
-  ENV_FILE: ${{ secrets.ENV_FILE }}
 
 jobs:
   setup-build-publish-deploy:
