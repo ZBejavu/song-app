@@ -16,7 +16,7 @@ env:
   DB_NAME: ${{ secrets.DB_NAME }}
   ENV_FILE: ${{ secrets.ENV_FILE }}
   SERVER_PORT: 8080 # the port your server is running on
-  # SECRET_NAME: ${{ secrets.SECRET_NAME}} # ADD all additional Secrets Here
+  ENV_FILE: ${{ secrets.ENV_FILE }}
 
 jobs:
   setup-build-publish-deploy:
@@ -38,23 +38,16 @@ jobs:
     - name: Configure Docker to use gcloud command-line
       run: gcloud --quiet auth configure-docker
 
-#     # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
-#     - name: Create Instance #for first time setup
-#       run: make create
+    # # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
+    # - name: Create Instance #for first time setup
+    #   run: make create
 
     # Create Rule To allow access to the port your app is running on.
 
     # # ONLY INCLUDE if it doesnt already exist for SERVER_PORT !!
     # - name: Create Firewall Rule
     #   run: make create-firewall-rule
-    - name: Run a multi-line script
-      run: |
-        file=".env"
-        echo "$ENV_FILE" >> $file
-        cat $file
-        cat -n .env
-        echo trying to add env file
-      working-directory: ./server
+
     # Install Dependencies (So the Docker Image Has The Latest Client Version)
     - name: Install dependencies
       run: npm ci --only=production
@@ -64,6 +57,15 @@ jobs:
     - name: Create production build
       run: CI=false INLINE_RUNTIME_CHUNK=false npm run build
       working-directory: ./songclient
+
+    - name: Create .env file from Secret
+      run: |
+        file=".env"
+        echo "$ENV_FILE" > $file
+        cat $file
+    
+    - name: Send .env File
+      run: gcloud compute scp .env --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
 
     # Build the Docker image
     - name: Build image
@@ -76,3 +78,6 @@ jobs:
     # Deploy Container to Gcloud Instance
     - name: deploy
       run: make deploy
+
+    - name: Remove .env File
+      run: make remove-env

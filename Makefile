@@ -23,13 +23,8 @@ create:
 		--tags http-server \
 		--machine-type e2-medium
 
-create-env:
-	$(MAKE) ssh-cmd CMD='\
-	  file=".env" \
-	  echo ${ENV_FILE} > $file \
-	  cat $file \
-	  cat -n .env \
-	  '
+remove-env:
+	$(MAKE) ssh-cmd CMD='rm .env'
 
 deploy: 
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
