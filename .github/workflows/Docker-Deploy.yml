@@ -50,12 +50,12 @@ jobs:
     # Install Dependencies (So the Docker Image Has The Latest Client Version)
     - name: Install dependencies
       run: npm ci --only=production
-      working-directory: ./client
+      working-directory: ./songclient
 
     # Build production build (So the Docker Image Has The Latest Build Version)
     - name: Create production build
       run: CI=false INLINE_RUNTIME_CHUNK=false npm run build
-      working-directory: ./client
+      working-directory: ./songclient
 
     # Enable When using ENV_FILE Secret
     # - name: Create .env file from Secret
