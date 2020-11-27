@@ -34,8 +34,6 @@ deploy:
 	-$(MAKE) network-init
 	@echo "initializing sql (if exists, continue on error)..."
 	-$(MAKE) sql-init
-	@echo "trying to create .env file"
-	$(MAKE) create-env
 	@echo "stopping old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	@echo "removing old container..."
