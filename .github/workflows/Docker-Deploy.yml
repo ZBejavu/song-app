@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  GCE_INSTANCE: instance-docker-new   # TODO: name your instance
+  GCE_INSTANCE: instance-docker-new2   # TODO: name your instance
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone if needed
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }} # The service account user you created
   DB_PASS: ${{ secrets.DB_PASS }}
@@ -58,14 +58,14 @@ jobs:
       working-directory: ./client
 
     # Enable When using ENV_FILE Secret
-    # - name: Create .env file from Secret
-    #   run: |
-    #     file=".env"
-    #     echo "$ENV_FILE" > $file
+    - name: Create .env file from Secret
+      run: |
+        file=".env"
+        echo "$ENV_FILE" > $file
 
     # Enable When using ENV_FILE Secret
-    # - name: Send .env File
-    #   run: gcloud compute scp .env --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
+    - name: Send .env File
+      run: gcloud compute scp .env --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
 
     # Build the Docker image
     - name: Build image
@@ -80,5 +80,5 @@ jobs:
       run: make deploy
 
     # Enable When using ENV_FILE Secret
-    # - name: Remove .env File
-    #   run: make remove-env
+    - name: Remove .env File
+      run: make remove-env
