@@ -14,7 +14,7 @@ env:
   DB_USER: ${{ secrets.DB_USER }}
   DB_HOST: ${{ secrets.DB_HOST }}
   DB_NAME: ${{ secrets.DB_NAME }}
-  ENV_FILE: ${{ secrets.ENV_FILE }}
+  ENV_FILE: ${{ secrets.ENV_FILE }} # Secret with all your environment variables.
   SERVER_PORT: 8080 # the port your server is running on
 
 jobs:
@@ -61,7 +61,6 @@ jobs:
       run: |
         file=".env"
         echo "$ENV_FILE" > $file
-        cat $file
     
     - name: Send .env File
       run: gcloud compute scp .env --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
