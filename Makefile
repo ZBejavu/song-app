@@ -47,13 +47,12 @@ deploy:
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
-			--env-file=.env \
 			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
 			'
+	# ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
+	# --env-file=.env \ 
 	@echo "Good Job Deploy Succeded !"
-
-## ADD Your Secrets Above ! -e SECRET_NAME=${SECRET_NAME} \ 
 
 network-init:
 	$(MAKE) ssh-cmd CMD='docker network create my-network'
