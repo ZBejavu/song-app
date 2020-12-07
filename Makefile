@@ -26,16 +26,19 @@ create:
 remove-env:
 	$(MAKE) ssh-cmd CMD='rm .env'
 
-deploy: 
+initialize:
+	@echo "configuring vm to use docker commands"
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
+	@echo "creating network..."
+	$(MAKE) network-init
+	@echo "creating volume for database..."
+	$(MAKE) volume-create
+	@echo "initializing sql (if exists, continue on error)..."
+	$(MAKE) sql-init
+
+deploy: 
 	@echo "pulling image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
-	@echo "creating network..."
-	-$(MAKE) network-init
-	@echo "creating volume for database..."
-	-$(MAKE) volume-create
-	@echo "initializing sql (if exists, continue on error)..."
-	-$(MAKE) sql-init
 	@echo "stopping old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	@echo "removing old container..."
