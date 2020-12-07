@@ -23,12 +23,6 @@ create:
 		--tags http-server \
 		--machine-type e2-medium
 
-create-with-volume:
-	@echo "creating new instance..."
-	$(MAKE) create
-	@echo "creating volume for database..."
-	$(MAKE) volume-create
-
 remove-env:
 	$(MAKE) ssh-cmd CMD='rm .env'
 
@@ -38,6 +32,8 @@ deploy:
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
 	@echo "creating network..."
 	-$(MAKE) network-init
+	@echo "creating volume for database..."
+	-$(MAKE) volume-create
 	@echo "initializing sql (if exists, continue on error)..."
 	-$(MAKE) sql-init
 	@echo "stopping old container..."
@@ -46,6 +42,8 @@ deploy:
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
 	@echo "starting new container..."
 	$(MAKE) start-app
+	@echo "Good Job Deploy Succeded !"
+	$(MAKE) remove-images
 	@echo "Good Job Deploy Succeded !"
 
 network-init:
@@ -61,7 +59,7 @@ create-firewall-rule:
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
 		docker run --name=${DB_HOST} \
-			-v /db-data:/var/lib/mysql
+			-v /db-data:/var/lib/mysql \
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
@@ -88,3 +86,6 @@ start-app:
 			'
 # ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
 # --env-file=.env \ 
+
+remove-images:
+	@$(MAKE) ssh-cmd CMD='docker image prune -a -f'
