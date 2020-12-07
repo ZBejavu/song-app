@@ -23,6 +23,12 @@ create:
 		--tags http-server \
 		--machine-type e2-medium
 
+create-with-volume:
+	@echo "creating new instance..."
+	$(MAKE) create
+	@echo "creating volume for database..."
+	$(MAKE) volume-create
+
 remove-env:
 	$(MAKE) ssh-cmd CMD='rm .env'
 
@@ -39,20 +45,7 @@ deploy:
 	@echo "removing old container..."
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
 	@echo "starting new container..."
-	@$(MAKE) ssh-cmd CMD='\
-		docker run -d --name=$(CONTAINER_NAME) \
-			--restart=unless-stopped \
-			--network my-network \
-			-e MYSQL_HOST=${DB_HOST} \
-			-e MYSQL_DATABASE=${DB_NAME} \
-			-e MYSQL_USER=${DB_USER} \
-			-e MYSQL_PASSWORD=${DB_PASS} \
-			--env-file=.env \
-			-p ${SERVER_PORT}:${SERVER_PORT} \
-			$(REMOTE_TAG) \
-			'
-	# ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
-	# --env-file=.env \ 
+	$(MAKE) start-app
 	@echo "Good Job Deploy Succeded !"
 
 network-init:
@@ -68,6 +61,7 @@ create-firewall-rule:
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
 		docker run --name=${DB_HOST} \
+			-v /db-data:/var/lib/mysql
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
@@ -75,3 +69,22 @@ sql-init:
 			--network my-network \
 			-d mysql:8 \
 			'
+
+volume-create:
+	$(MAKE) ssh-cmd CMD='docker volume create db-data'
+
+start-app:
+	@$(MAKE) ssh-cmd CMD='\
+		docker run -d --name=$(CONTAINER_NAME) \
+			--restart=unless-stopped \
+			--network my-network \
+			-e MYSQL_HOST=${DB_HOST} \
+			-e MYSQL_DATABASE=${DB_NAME} \
+			-e MYSQL_USER=${DB_USER} \
+			-e MYSQL_PASSWORD=${DB_PASS} \
+			--env-file=.env \
+			-p ${SERVER_PORT}:${SERVER_PORT} \
+			$(REMOTE_TAG) \
+			'
+# ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
+# --env-file=.env \ 

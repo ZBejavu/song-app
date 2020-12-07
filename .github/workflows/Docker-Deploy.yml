@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  GCE_INSTANCE: docker-instance   # TODO: name your instance
+  GCE_INSTANCE: docker-instance-volume   # TODO: name your instance
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone if needed
   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }} # The service account user you created
   DB_PASS: ${{ secrets.DB_PASS }}
@@ -39,7 +39,7 @@ jobs:
 
     # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
     - name: Create Instance #for first time setup
-      run: make create
+      run: make create-with-volume
 
     # Create Rule To allow access to the port your app is running on.
 
