@@ -59,7 +59,7 @@ create-firewall-rule:
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
 		docker run --name=${DB_HOST} \
-			-v /db-data:/var/lib/mysql \
+			-v db-data:/var/lib/mysql \
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
