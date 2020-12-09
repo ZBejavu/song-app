@@ -1,8 +1,8 @@
 FROM node:12
 
-WORKDIR /client/build
+WORKDIR /songclient/build
 
-ADD /client/build .
+ADD /songclient/build .
 
 WORKDIR /server
 
