@@ -3,9 +3,9 @@ version: '3.1'
 services:
 
     mysql:
-      image: mysql
+      image: mysql:8
       cap_add:
-        - SYS_NICE  # CAP_SYS_NICE
+        - SYS_NICE  # CAP_SYS_NICE -> silently handles warnings
       command: --default-authentication-plugin=mysql_native_password
       restart: always
       environment:
@@ -16,7 +16,7 @@ services:
       volumes: 
         - mysql-data:/var/lib/mysql
       networks: 
-        - song-network
+        - application-network
 
     api-server:
       depends_on:
@@ -24,11 +24,11 @@ services:
       build:
         context: .
         dockerfile: Dockerfile
-      image: songapptest
+      image: myapplication
       ports: 
           - "8080:8080" ## Change if your port is different
       networks: 
-        - song-network
+        - application-network
       environment:
         MYSQL_USER: root
         MYSQL_PASSWORD: password
@@ -37,7 +37,7 @@ services:
         SERVER_PORT: 8080 ## Change if your port is different
 
 networks:
-  song-network:
+  application-network:
     driver: bridge
 volumes: 
   mysql-data:

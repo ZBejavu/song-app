@@ -2,6 +2,7 @@ ZONE=${GCE_INSTANCE_ZONE}
 LOCAL_TAG=${GCE_INSTANCE}-image:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/${PROJECT_ID}/$(LOCAL_TAG)
 CONTAINER_NAME=app-container
+NETWORK_NAME=my-net
 
 ssh-cmd:
 	@gcloud --quiet compute ssh \
@@ -23,35 +24,6 @@ create:
 		--tags http-server \
 		--machine-type e2-medium
 
-remove-env:
-	$(MAKE) ssh-cmd CMD='rm .env'
-
-initialize:
-	@echo "configuring vm to use docker commands"
-	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
-	@echo "creating network..."
-	$(MAKE) network-init
-	@echo "creating volume for database..."
-	$(MAKE) volume-create
-	@echo "initializing sql (if exists, continue on error)..."
-	$(MAKE) sql-init
-
-deploy: 
-	@echo "pulling image..."
-	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
-	@echo "stopping old container..."
-	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
-	@echo "removing old container..."
-	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
-	@echo "starting new container..."
-	$(MAKE) start-app
-	@echo "Good Job Deploy Succeded !"
-	$(MAKE) remove-images
-	@echo "Good Job Deploy Succeded !"
-
-network-init:
-	$(MAKE) ssh-cmd CMD='docker network create my-network'
-
 create-firewall-rule:
 	@gcloud compute firewall-rules create default-allow-http-${SERVER_PORT} \
 		--allow tcp:${SERVER_PORT} \
@@ -59,26 +31,36 @@ create-firewall-rule:
 		--target-tags http-server \
 		--description "Allow port ${SERVER_PORT} access to http-server"
 
+remove-env:
+	$(MAKE) ssh-cmd CMD='rm .env'
+
+network-init:
+	$(MAKE) ssh-cmd CMD='docker network create $(NETWORK_NAME)'
+
+volume-create:
+	$(MAKE) ssh-cmd CMD='docker volume create db-data'
+
+remove-images:
+	@$(MAKE) ssh-cmd CMD='docker image prune -a -f'
+
 sql-init:
 	$(MAKE) ssh-cmd CMD=' \
 		docker run --name=${DB_HOST} \
+			--restart=unless-stopped \
 			-v db-data:/var/lib/mysql \
 			-e MYSQL_ROOT_PASSWORD=${DB_PASS} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
 			-e MYSQL_PASSWORD=${DB_PASS} \
-			--network my-network \
+			--network=$(NETWORK_NAME) \
 			-d mysql:8 \
 			'
-
-volume-create:
-	$(MAKE) ssh-cmd CMD='docker volume create db-data'
 
 start-app:
 	@$(MAKE) ssh-cmd CMD='\
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
-			--network my-network \
+			--network=$(NETWORK_NAME) \
 			-e MYSQL_HOST=${DB_HOST} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
@@ -90,5 +72,25 @@ start-app:
 # ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
 # --env-file=.env \ 
 
-remove-images:
-	@$(MAKE) ssh-cmd CMD='docker image prune -a -f'
+initialize:
+	@echo "configuring vm to use docker commands"
+	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
+	@echo "creating network..."
+	$(MAKE) network-init
+	@echo "creating volume for database..."
+	$(MAKE) volume-create
+	@echo "initializing sql ..."
+	$(MAKE) sql-init
+
+deploy: 
+	@echo "pulling image..."
+	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
+	@echo "stopping old container..."
+	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
+	@echo "removing old container..."
+	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
+	@echo "starting new container..."
+	@$(MAKE) start-app
+	@echo "Good Job Deploy Succeded !"
+	$(MAKE) remove-images
+	@echo "Good Job Deploy Succeded !"

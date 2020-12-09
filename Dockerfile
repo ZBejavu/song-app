@@ -1,8 +1,8 @@
 FROM node:12
 
-WORKDIR /songclient/build
+WORKDIR /client/build
 
-ADD /songclient/build .
+ADD /client/build .
 
 WORKDIR /server
 
@@ -16,6 +16,7 @@ RUN npm install --production
 # RUN git clone https://github.com/vishnubob/wait-for-it.git
 
 #Change to your Port
+
 EXPOSE 8080 
 
 COPY /server .
@@ -32,5 +33,6 @@ CMD ["npm", "run", "spinup"]
 # "dev": "how you start your server"
 # "spinup": "npm run migrate && npm run dev"
 # "spinupseed": "npm run migrate && npm run undoseed && npm run seed && npm run dev" // for continuesly seeding data
+
 
 
