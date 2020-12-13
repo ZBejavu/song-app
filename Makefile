@@ -75,12 +75,12 @@ start-app:
 initialize:
 	@echo "configuring vm to use docker commands"
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
-	@echo "creating network..."
-	$(MAKE) network-init
-	@echo "creating volume for database..."
-	$(MAKE) volume-create
-	@echo "initializing sql (if exists, continue on error)..."
-	$(MAKE) sql-init
+	# @echo "creating network..."
+	# $(MAKE) network-init
+	# @echo "creating volume for database..."
+	# $(MAKE) volume-create
+	# @echo "initializing sql (if exists, continue on error)..."
+	# $(MAKE) sql-init
 
 deploy: 
 	@echo "pulling image..."
