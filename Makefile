@@ -60,7 +60,6 @@ start-app:
 	@$(MAKE) ssh-cmd CMD='\
 		docker run -d --name=$(CONTAINER_NAME) \
 			--restart=unless-stopped \
-			--network=$(NETWORK_NAME) \
 			-e MYSQL_HOST=${DB_HOST} \
 			-e MYSQL_DATABASE=${DB_NAME} \
 			-e MYSQL_USER=${DB_USER} \
@@ -71,6 +70,8 @@ start-app:
 			'
 # ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
 # --env-file=.env \ 
+
+			# --network=$(NETWORK_NAME) \ 
 
 initialize:
 	@echo "configuring vm to use docker commands"
