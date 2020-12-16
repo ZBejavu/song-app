@@ -58,12 +58,15 @@ jobs:
       working-directory: ./songclient 
 
     # Enable When using ENV_FILE Secret
-    - name: Create .env file from Secret
-      run: echo "$ENV_FILE" > .env
+    - name: create .env file, decode it
+      run:  | 
+        echo "$ENV_FILE" > .env
+        base64 .env > .env.b64
+        gcloud compute scp .env.b64 --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
 
     # Enable When using ENV_FILE Secret
     - name: Send .env File
-      run: gcloud compute scp .env --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
+      run: gcloud compute scp .env.b64 --zone $GCE_INSTANCE_ZONE $GCE_INSTANCE:~
 
     # Build the Docker image
     - name: Build image
@@ -77,6 +80,9 @@ jobs:
     # Initialize Envoironment in Gcloud Instance
     - name: Initialize volumes, network and other Containers that don't change
       run: make initialize
+
+    - name: decode .env File for container use
+      run: make ssh-cmd CMD='base64 -d .env.b64 > .env && rm .env.b64'
 
     # Deploy Container to Gcloud Instance
     - name: deploy
