@@ -37,9 +37,9 @@ jobs:
     - name: Configure Docker to use gcloud command-line
       run: gcloud --quiet auth configure-docker
 
-    # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
-    - name: Create Instance 
-      run: make create
+    # # Create a new instance -> MARK IT OUT AFTER FIRST DEPLOY
+    # - name: Create Instance 
+    #   run: make create
 
     # Create Rule To allow access to the port your app is running on.
 
@@ -76,10 +76,10 @@ jobs:
     - name: Publish image
       run: make push
 
-    # ONLY first time setup
-    # Initialize Envoironment in Gcloud Instance
-    - name: Initialize volumes, network and other Containers that don't change
-      run: make initialize
+    # # ONLY first time setup
+    # # Initialize Envoironment in Gcloud Instance
+    # - name: Initialize volumes, network and other Containers that don't change
+    #   run: make initialize
 
     - name: decode .env File for container use
       run: make ssh-cmd CMD='base64 -d .env.b64 > .env && rm .env.b64'
