@@ -16,7 +16,7 @@ env:
   DB_NAME: ${{ secrets.DB_NAME }}
   ENV_FILE: ${{ secrets.ENV_FILE }} # Secret with all additional environment variables.
   SERVER_PORT: 8080 # the port your server is running on
-  CMDTORUN: npm run spinup
+  CMDTORUN: npm run spinseedup
 
 jobs:
   setup-build-publish-deploy:
