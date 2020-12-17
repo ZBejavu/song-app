@@ -23,7 +23,7 @@ COPY /server .
 
 # CMD ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "npm", "run", "spinup"]
 
-CMD ["npm", "run", "spinseedup"]
+# CMD ["npm", "run", "spinseedup"]
 
 # in your package.json add a script that migrates your database and then start your server
 # example -> 

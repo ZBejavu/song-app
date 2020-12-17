@@ -67,6 +67,7 @@ start-app:
 			--env-file=.env \
 			-p ${SERVER_PORT}:${SERVER_PORT} \
 			$(REMOTE_TAG) \
+			${CMDTORUN} \
 			'
 # ADD the followoing line bellow MYSQL_PASSWORD If you added the ENV_FILE Secret :
 # --env-file=.env \ 
