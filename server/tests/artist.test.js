@@ -36,7 +36,7 @@ describe('api v1', () => {
     // expect(artist2.name).toBe(artistMock[1].name);
     // expect(artistMock[0].name).toBe(artistMock[0].name);
     // expect(artistMock[1].name).toBe(artistMock[1].name);
-    expect(1).toBe(1)
+    expect(1).toBe(2)
     done();
   })
 })
