@@ -48,5 +48,4 @@ jobs:
           NODE_ENV: test
           MYSQL_DATABASE_TEST: database_test
           MYSQL_PASSWORD: password
-          MYSQL_HOST: mysql
         working-directory: ./server
