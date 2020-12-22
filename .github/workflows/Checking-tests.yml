@@ -1,4 +1,4 @@
- name: Build and Deploy to Google Compute Engine
+name: Check Tests
 
 on:
   push:
