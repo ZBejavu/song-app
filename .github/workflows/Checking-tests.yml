@@ -30,15 +30,15 @@ jobs:
           MYSQL_USER: root
         ports:
           - 3306:3306
-    # strategy:
-    #   matrix:
-    #     node-version: [10.x]
+    strategy:
+      matrix:
+        node-version: [10.x]
     steps:
       - uses: actions/checkout@v2
-      # - name: Setup node  (Node.js ${{ matrix.node-version }})
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
+      - name: Setup node  (Node.js ${{ matrix.node-version }})
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Install Server dependencies
         run: npm ci
         working-directory: ./server
