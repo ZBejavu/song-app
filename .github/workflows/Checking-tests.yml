@@ -1,7 +1,9 @@
  name: Build and Deploy to Google Compute Engine
 
-on: push
-# branches: [test-workflow]
+on:
+  push:
+    branches:
+    - testbranch # specify the branch you want the deploy to take place from
 
 env:
   DB_PASS: ${{ secrets.DB_PASS }}
