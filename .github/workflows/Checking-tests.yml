@@ -19,34 +19,34 @@ env:
 jobs:   
   server-tests:
       # The type of runner that the job will run on
-      runs-on: ubuntu-latest
-      services:
-        mysql:
-          image: mysql:8
-          env:
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_PASSWORD: password
-            MYSQL_DATABASE: database_test
-            MYSQL_USER: root
-          ports:
-            - 3306:3306
-      # strategy:
-      #   matrix:
-      #     node-version: [10.x]
-      steps:
-        - uses: actions/checkout@v2
-        # - name: Setup node  (Node.js ${{ matrix.node-version }})
-        #   uses: actions/setup-node@v1
-        #   with:
-        #     node-version: ${{ matrix.node-version }}
-        - name: Install Server dependencies
-          run: npm ci
-          working-directory: ./server
-        - name: migrate database and test
-          run: spintest
-          env:
-            NODE_ENV: test
-            MYSQL_DATABASE_TEST: database_test
-            MYSQL_PASSWORD: password
-            MYSQL_HOST: mysql
-          working-directory: ./server
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: database_test
+          MYSQL_USER: root
+        ports:
+          - 3306:3306
+    # strategy:
+    #   matrix:
+    #     node-version: [10.x]
+    steps:
+      - uses: actions/checkout@v2
+      # - name: Setup node  (Node.js ${{ matrix.node-version }})
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      - name: Install Server dependencies
+        run: npm ci
+        working-directory: ./server
+      - name: migrate database and test
+        run: spintest
+        env:
+          NODE_ENV: test
+          MYSQL_DATABASE_TEST: database_test
+          MYSQL_PASSWORD: password
+          MYSQL_HOST: mysql
+        working-directory: ./server
