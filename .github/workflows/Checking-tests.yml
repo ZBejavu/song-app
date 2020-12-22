@@ -3,7 +3,7 @@
 on:
   push:
     branches:
-    - testbranch # specify the branch you want the deploy to take place from
+    - test-workflow # specify the branch you want the deploy to take place from
 
 env:
   DB_PASS: ${{ secrets.DB_PASS }}
@@ -14,7 +14,7 @@ env:
   SERVER_PORT: 8080 # the port your server is running on
   CMDTORUN: npm run spinseedup
   TEST_CONTAINER: test-container
-  docker exec song-app_test-container_1 npm run test
+  # docker exec song-app_test-container_1 npm run test
 
 jobs:   
   server-tests:
