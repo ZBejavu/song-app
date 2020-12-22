@@ -1,5 +1,4 @@
 const request = require('supertest');
-const app = require('../app');
 const { Artist } = require('../models');
 // const artistsMock = require('../copyArtistInfo');
 const artistsMock = {
@@ -13,15 +12,18 @@ const artistsMock = {
 
 describe('api v1', () => {
 
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     try{
       await Artist.destroy({ where: {}, truncate: true, force: true});
       await Artist.create(artistsMock);
     }catch(e){ console.error(e.message)}
+    finally{
+      done()
+    }
   });
-  afterAll(async () => {
+  afterAll(async (done) => {
     await Artist.destroy({ where: {}, truncate: true, force: true });
-    await app.close();
+    done()
   });
 
   it('Can create artist', async (done) => {

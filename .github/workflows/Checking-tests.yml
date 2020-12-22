@@ -44,7 +44,6 @@ jobs:
       - name: migrate database and test
         run: npm run spintest
         env:
-          NODE_ENV: test
           MYSQL_DATABASE_TEST: database_test
           MYSQL_PASSWORD: null
         working-directory: ./server
