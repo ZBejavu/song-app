@@ -2,6 +2,22 @@ version: '3.1'
 
 services:
 
+    # mysql:
+    #   image: mysql:8
+    #   cap_add:
+    #     - SYS_NICE  # CAP_SYS_NICE -> silently handles warnings
+    #   command: --default-authentication-plugin=mysql_native_password
+    #   restart: always
+    #   environment:
+    #     MYSQL_ROOT_PASSWORD: password
+    #     MYSQL_PASSWORD: password
+    #     MYSQL_DATABASE: database_development
+    #     MYSQL_USER: root
+    #   volumes: 
+    #     - mysql-data:/var/lib/mysql
+    #   networks: 
+    #     - application-network
+
     mysql:
       image: mysql:8
       cap_add:
@@ -11,30 +27,52 @@ services:
       environment:
         MYSQL_ROOT_PASSWORD: password
         MYSQL_PASSWORD: password
-        MYSQL_DATABASE: database_development
+        MYSQL_DATABASE: database_test
         MYSQL_USER: root
+      ports: 
+          - "3307:3306" ## Change if your port is different
       volumes: 
         - mysql-data:/var/lib/mysql
       networks: 
         - application-network
 
-    api-server:
+    test-container:
       depends_on:
         - mysql
       build:
         context: .
-        dockerfile: Dockerfile
-      image: myapplication
+        dockerfile: Dockerfile.server
+      image: my-test
       ports: 
           - "8080:8080" ## Change if your port is different
       networks: 
         - application-network
+      command: "./wait-for-it/wait-for-it.sh mysql:3307 -- npm run spintest"
       environment:
         MYSQL_USER: root
         MYSQL_PASSWORD: password
         MYSQL_DATABASE: database_development
+        MYSQL_DATABASE_TEST: database_test
         MYSQL_HOST: mysql
         SERVER_PORT: 8080 ## Change if your port is different
+
+    # api-server:
+    #   depends_on:
+    #     - mysql
+    #   build:
+    #     context: .
+    #     dockerfile: Dockerfile
+    #   image: myapplication
+    #   ports: 
+    #       - "8080:8080" ## Change if your port is different
+    #   networks: 
+    #     - application-network
+    #   environment:
+    #     MYSQL_USER: root
+    #     MYSQL_PASSWORD: password
+    #     MYSQL_DATABASE: database_development
+    #     MYSQL_HOST: mysql
+    #     SERVER_PORT: 8080 ## Change if your port is different
 
 networks:
   application-network:
