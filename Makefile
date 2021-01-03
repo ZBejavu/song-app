@@ -11,6 +11,12 @@ ssh-cmd:
 build:
 	docker build -t $(LOCAL_TAG) .
 
+build-test-server:
+	docker build -t serverimage
+	
+build-test-client:
+	docker build -t clientimage
+
 push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
